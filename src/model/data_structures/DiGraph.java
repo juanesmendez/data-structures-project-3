@@ -5,112 +5,18 @@ public class DiGraph<K extends Comparable<K>, V, A> implements IDiGraph<K,V,A>{
 	
 	private int numVertices;
 	private int numEdges;
-	private IHashTableLP<K,Vertex<K,V>> vertices;
+	private IHashTableLP<K,Vertex<K,V,A>> vertices;
 	
-	
-	private LinkedList<Vertex<K,V>> listVertices; //Para trabajar internamente la marcada de los vertices
-	
+	private LinkedList<Vertex<K,V,A>> listVertices; //Para trabajar internamente la marcada de los vertices
 	private LinkedList<K> listVerticesKeys;
 	
 	public DiGraph() {
-		this.vertices = new HashTableLP<K,Vertex<K,V>>();
-		this.listVertices = new List<Vertex<K,V>>();
+		this.vertices = new HashTableLP<K,Vertex<K,V,A>>();
+		this.listVertices = new List<Vertex<K,V,A>>();
 		this.listVerticesKeys = new List<K>();
 		this.numVertices=0;
 		this.numEdges = 0;
 		
-	}
-	
-	public class Vertex<K extends Comparable<K>,V> implements Comparable<Vertex<K,V>>{ //Toco volverla publica , cambiarla a private cuando se pueda
-		
-		K id;
-		V value;
-		boolean marked;
-		LinkedList<Edge<A>> edges;
-		
-		public Vertex(K id, V value) {
-			this.id = id;
-			this.value = value;
-			this.marked = false;
-			this.edges = new List<>();
-		}
-		public K getId() {
-			return id;
-		}
-		public void setId(K id) {
-			this.id = id;
-		}
-		public V getValue() {
-			return value;
-		}
-		public void setValue(V value) {
-			this.value = value;
-		}
-		public boolean isMarked() {
-			return marked;
-		}
-		public void setMarked(boolean mark) {
-			this.marked = mark;
-		}
-		
-		public LinkedList<Edge<A>> getEdges() {
-			return edges;
-		}
-		public void setEdges(LinkedList<Edge<A>> edges) {
-			this.edges = edges;
-		}
-		public void addEdge(Vertex vertexFini, A infoEdge) {
-			// TODO Auto-generated method stub
-			this.edges.add(new Edge<A>(infoEdge, this, vertexFini)); //I add the edge to the list of edges of the Vertex. Just in ome direction (DirectedGraph)
-		}
-		@Override
-		public int compareTo(Vertex<K,V> o) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-		
-		
-		
-		
-	}
-	
-	public class Edge<A> implements Comparable <Edge<A>>{ //Cambiar a private cuando se pueda
-		
-		A weight;
-		boolean marked;
-		Vertex<K,V> initialVertex;
-		Vertex<K,V> finalVertex;
-		
-		public Edge(A weight, Vertex initialVertex, Vertex finalVertex) {
-			this.weight = weight;
-			this.marked = false;
-			this.initialVertex = initialVertex;
-			this.finalVertex = finalVertex;
-			
-		}
-
-		public Vertex<K,V> getInitialVertex() {
-			return initialVertex;
-		}
-
-		public Vertex<K,V> getFinalVertex() {
-			return finalVertex;
-		}
-
-		public A getWeight() {
-			return weight;
-		}
-
-		public void setWeight(A weight) {
-			this.weight = weight;
-		}
-
-		@Override
-		public int compareTo(Edge<A> o) {
-			// TODO Auto-generated method stub
-			
-			return 0;
-		}
 	}
 	
 	@Override
@@ -128,9 +34,9 @@ public class DiGraph<K extends Comparable<K>, V, A> implements IDiGraph<K,V,A>{
 	@Override
 	public void addVertex(K idVertex, V infoVertex) {
 		// TODO Auto-generated method stub
-		Vertex<K,V> vertex = this.vertices.get(idVertex);
+		Vertex<K,V,A> vertex = this.vertices.get(idVertex);
 		if(vertex == null) { //I check if the vertex doesnt exist
-			vertex = new Vertex<K, V>(idVertex, infoVertex);
+			vertex = new Vertex<K, V, A>(idVertex, infoVertex);
 			this.vertices.put(idVertex, vertex);
 			this.numVertices++;
 			this.listVertices.add(vertex); //I add the vertex to the list of vertices
@@ -144,8 +50,8 @@ public class DiGraph<K extends Comparable<K>, V, A> implements IDiGraph<K,V,A>{
 		if(idVertexIni == null || idVertexFin == null || infoEdge  == null) {
 			throw new IllegalArgumentException("Argument to get is null");
 		}
-		Vertex<K,V> vertexIni = vertices.get(idVertexIni);
-		Vertex<K,V> vertexFini = vertices.get(idVertexFin);
+		Vertex<K,V,A> vertexIni = vertices.get(idVertexIni);
+		Vertex<K,V,A> vertexFini = vertices.get(idVertexFin);
 		if(vertexIni == null || vertexFini == null) {
 			throw new NullPointerException("Vertex not found");
 		}
@@ -159,7 +65,7 @@ public class DiGraph<K extends Comparable<K>, V, A> implements IDiGraph<K,V,A>{
 		if(idVertex == null) {
 			throw new IllegalArgumentException("Argument to get is null");
 		}
-		Vertex<K,V> vertex = vertices.get(idVertex);
+		Vertex<K,V,A> vertex = vertices.get(idVertex);
 		
 		if(vertex == null) {
 			return null;
@@ -176,7 +82,7 @@ public class DiGraph<K extends Comparable<K>, V, A> implements IDiGraph<K,V,A>{
 			throw new IllegalArgumentException("Argument to get is null");
 		}
 		
-		Vertex<K,V> vertex = vertices.get(idVertex);
+		Vertex<K,V,A> vertex = vertices.get(idVertex);
 		if(vertex == null) {
 			throw new NullPointerException("Vertex not found"); //Check if I should use this exception
 		}
@@ -193,8 +99,8 @@ public class DiGraph<K extends Comparable<K>, V, A> implements IDiGraph<K,V,A>{
 			throw new IllegalArgumentException();
 		}
 		A infoEdge;
-		Vertex<K,V> vertexIni = vertices.get(idVertexIni);
-		Vertex<K,V> vertexFin = vertices.get(idVertexFin);
+		Vertex<K,V,A> vertexIni = vertices.get(idVertexIni);
+		Vertex<K,V,A> vertexFin = vertices.get(idVertexFin);
 		
 		if((vertexIni == null) || (vertexFin == null)) {
 			throw new NullPointerException("Vertex not found");
@@ -215,8 +121,8 @@ public class DiGraph<K extends Comparable<K>, V, A> implements IDiGraph<K,V,A>{
 	@Override
 	public void setInfoEdge(K idVertexIni, K idVertexFin, A infoEdge) {
 		// TODO Auto-generated method stub
-		Vertex<K,V> vertexIni = vertices.get(idVertexIni);
-		Vertex<K,V> vertexFin = vertices.get(idVertexFin);
+		Vertex<K,V,A> vertexIni = vertices.get(idVertexIni);
+		Vertex<K,V,A> vertexFin = vertices.get(idVertexFin);
 		LinkedList<Edge<A>> edges = vertexIni.getEdges();
 		
 		if((idVertexIni == null) || (idVertexFin == null)) {
@@ -238,7 +144,7 @@ public class DiGraph<K extends Comparable<K>, V, A> implements IDiGraph<K,V,A>{
 	@Override
 	public Iterable<K> adj(K idVertex) {
 		// TODO Auto-generated method stub
-		Vertex<K,V> vertex;
+		Vertex<K,V,A> vertex;
 		LinkedList<K> adj = new List<K>();
 		LinkedList<Edge<A>> edges; 
 		if(idVertex == null) {
@@ -266,9 +172,9 @@ public class DiGraph<K extends Comparable<K>, V, A> implements IDiGraph<K,V,A>{
 	}
 
 	@Override
-	public Iterable<DiGraph<K,V,A>.Vertex<K, V>> getListVertices() {
+	public Iterable<Vertex<K, V, A>> getListVertices() {
 		// TODO Auto-generated method stub
-		Iterable<DiGraph<K,V,A>.Vertex<K, V>> returnList = this.listVertices;
+		Iterable<Vertex<K, V, A>> returnList = this.listVertices;
 		return returnList;
 	}
 

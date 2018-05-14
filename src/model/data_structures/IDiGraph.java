@@ -1,6 +1,5 @@
 package model.data_structures;
 
-import model.data_structures.DiGraph.Vertex;
 
 public interface IDiGraph<K extends Comparable<K>,V,A> {
 	
@@ -66,5 +65,5 @@ public interface IDiGraph<K extends Comparable<K>,V,A> {
 	 */
 	public LinkedList<K> getListVertexKeys();
 	
-	public Iterable<DiGraph<K,V,A>.Vertex<K,V>> getListVertices();
+	public Iterable<Vertex<K,V,A>> getListVertices();
 }
