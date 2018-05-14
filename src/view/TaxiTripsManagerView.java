@@ -25,7 +25,7 @@ public class TaxiTripsManagerView
 			{
 			case 1:
 				IDiGraph<String,InfoVertex,InfoEdge> grafo= Controller.cargarGrafo();
-
+				System.out.println();
 				System.out.println("NUMERO DE VERTICES EN EL GRAFO: "+grafo.V());
 				System.out.println("NUMERO DE ARCOS EN EL GRAFO: "+grafo.E());
 				System.out.println();
