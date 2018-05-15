@@ -178,6 +178,25 @@ public class DiGraph<K extends Comparable<K>, V, A> implements IDiGraph<K,V,A>{
 		return adj;
 	}
 
+	public IDiGraph<K,V,A> reverse() {
+		IDiGraph<K,V,A> reversed = new DiGraph<>();
+		for(Vertex<K,V,A> v: this.listVertices) {
+			reversed.addVertex(v.getId(), v.getValue());
+		}
+		
+		for(Vertex<K,V,A> v :this.listVertices) {
+			for(Edge<A> e:v.getEdges()) {
+				Vertex initialVertex = e.getInitialVertex();
+				Vertex finalVertex = e.getFinalVertex();
+				reversed.addEdge((K)finalVertex.getId(), (K)initialVertex.getId(), (A)e.getWeight());
+			}
+		}
+		
+		
+		return reversed;
+	}
+	
+	
 	@Override
 	public LinkedList<K> getListVertexKeys() {
 		// TODO Auto-generated method stub

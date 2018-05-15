@@ -44,9 +44,9 @@ public class TaxiTripsManagerView
 
 				break;
 			case 1:
-				Vertex<String,InfoVertex,InfoEdge> vertex;
+				
 				try {
-					vertex = Controller.verticeMasCongestionado();
+					Vertex<String,InfoVertex,InfoEdge> vertex = Controller.verticeMasCongestionado();
 					System.out.println("INFORMACION VERTICE MAS CONGESTIONADO EN CHICAGO");
 					System.out.println("Latitud: "+vertex.getValue().getLatitudReferencia());
 					System.out.println("Longitud: "+vertex.getValue().getLongitudReferencia());
@@ -76,6 +76,22 @@ public class TaxiTripsManagerView
 					
 				}
 				*/
+			
+				try {
+					LinkedList<Component> componentes = Controller.calcularComponentesFuertementeConexos();
+					System.out.println("COMPONENTES: ");
+					System.out.println();
+					for(Component c: componentes) {
+						System.out.println(c.toString());
+						System.out.println();
+					}
+					
+					System.out.println("NUMERO TOTAL DE COMPONENTES "+componentes.size());
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				break;
 			
@@ -93,7 +109,7 @@ public class TaxiTripsManagerView
 		System.out.println("---------------------Taller 3----------------------");
 		System.out.println("0. Cargar grafo apartir de archivo JSON");
 		System.out.println("1. Mostrar informacion del vertice mas congestionado en Chicago.");
-		System.out.println("2. Prueba");
+		System.out.println("2. Calcular componentes fuertemente conexas.");
 		System.out.println("3. Salir");
 		System.out.println("Digite el n�mero de opci�n para ejecutar la tarea, luego presione enter: (Ej., 1):");
 

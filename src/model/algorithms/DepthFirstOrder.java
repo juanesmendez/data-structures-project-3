@@ -6,11 +6,13 @@ import model.data_structures.Stack;
 import model.data_structures.Vertex;
 import model.data_structures.Edge;
 
+
+//Finds the topological order
 public class DepthFirstOrder<K extends Comparable <K>,V,A> {
-	
+
 	private boolean[] marked;
 	private Stack<Integer> reversePostOrder; // Stack que guardara los 'num' de cada vertice para poderlos ideentificar
-	
+
 	public DepthFirstOrder(IDiGraph<K,V,A> graph) {
 		reversePostOrder = new Stack<Integer>();
 		marked = new boolean[graph.V()];
@@ -32,8 +34,8 @@ public class DepthFirstOrder<K extends Comparable <K>,V,A> {
 		}
 		reversePostOrder.push(v.getNum());
 	}
-	
+
 	public Iterable<Integer> reversePostorder(){
 		return reversePostOrder; 
-	 } 
+	} 
 }

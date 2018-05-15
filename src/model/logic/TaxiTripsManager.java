@@ -26,11 +26,13 @@ import com.sun.javafx.binding.StringFormatter;
 
 import api.ITaxiTripsManager;
 import javafx.util.converter.LocalDateStringConverter;
+import model.algorithms.KosarajuSharirSCC;
 import model.data_structures.DiGraph;
 import model.data_structures.IDiGraph;
 import model.data_structures.LinkedList;
 import model.data_structures.List;
 import model.data_structures.Vertex;
+import model.vo.Component;
 import model.vo.InfoEdge;
 import model.vo.InfoVertex;
 public class TaxiTripsManager implements ITaxiTripsManager
@@ -168,5 +170,41 @@ public class TaxiTripsManager implements ITaxiTripsManager
 		}
 		
 		return vertexToFind;
+	}
+
+	@Override
+	public LinkedList<Component> calcularComponentesFuertementeConexos() throws Exception {
+		// TODO Auto-generated method stub
+		LinkedList<Component> listComponents = new List<Component>();
+		Component comp;
+		Component aux;
+		
+		if(this.graph == null) {
+			throw new Exception("Grafo aun no ha sido creado");
+		}
+		KosarajuSharirSCC<String, InfoVertex, InfoEdge> kosarajuSharir = new KosarajuSharirSCC<>(graph);
+		
+		int[] array = kosarajuSharir.getId();
+		
+		for(int i=0;i<array.length;i++) {
+			System.out.println(array[i]);
+			int color = array[i];
+			comp = new Component(color);
+			aux = listComponents.get(comp);
+			
+			if(aux == null) {
+				aux = comp;
+				aux.agregarVertice();
+				listComponents.add(aux);
+			}else {
+				aux.agregarVertice();
+			}
+		}
+		System.out.println("ARRAY SIZE: "+array.length);
+		
+		
+		
+		
+		return listComponents;
 	}
 }

@@ -12,7 +12,7 @@ import model.vo.*;
 public class Controller 
 {
 	/**
-	 * modela el manejador de la clase l�gica
+	 * modela el manejador de la clase logica
 	 */
 	private static ITaxiTripsManager  manager = new TaxiTripsManager();
 	
@@ -22,6 +22,10 @@ public class Controller
 	
 	public static Vertex<String,InfoVertex,InfoEdge> verticeMasCongestionado() throws Exception{
 		return manager.verticeMasCongestionado();
+	}
+	
+	public static LinkedList<Component> calcularComponentesFuertementeConexos() throws Exception{
+		return manager.calcularComponentesFuertementeConexos();
 	}
 	
 }

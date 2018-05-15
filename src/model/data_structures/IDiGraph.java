@@ -69,6 +69,10 @@ public interface IDiGraph<K extends Comparable<K>,V,A> {
 	 * Return the keys of the vertices in the graph
 	 * @return List of keys of the vertices in graph
 	 */
+	
+	public IDiGraph<K,V,A> reverse();
+	
+	
 	public LinkedList<K> getListVertexKeys();
 	
 	public Iterable<Vertex<K,V,A>> getListVertices();

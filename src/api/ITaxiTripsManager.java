@@ -13,7 +13,7 @@ public interface ITaxiTripsManager
 	
 	public Vertex<String,InfoVertex,InfoEdge> verticeMasCongestionado() throws Exception;
 	
-
+	public LinkedList<Component> calcularComponentesFuertementeConexos() throws Exception;
 
 
 }
