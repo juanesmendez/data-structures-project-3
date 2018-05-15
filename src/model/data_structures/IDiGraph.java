@@ -33,6 +33,12 @@ public interface IDiGraph<K extends Comparable<K>,V,A> {
 	 * @return Value of the vertex to find
 	 */
 	public V getInfoVertex(K idVertex);
+	
+	
+	
+	public Vertex<K,V,A> getVertexByNum(int num);
+	
+	
 	/**
 	 * Changes the information of a vertex.
 	 * @param idVertex Key of the vertex to set info

@@ -3,17 +3,33 @@ package model.data_structures;
 
 public class Vertex<K extends Comparable<K>,V, A> implements Comparable<Vertex<K,V,A>>{ //Toco volverla publica , cambiarla a private cuando se pueda
 	
-	K id;
-	V value;
-	boolean marked;
-	LinkedList<Edge<A>> edges;
+	private int num;
+	private K id;
+	private V value;
+	private boolean marked;
+	private int inDegree;
+	private int outDegree;
+	private int component;
+	private LinkedList<Edge<A>> edges;
 	
 	public Vertex(K id, V value) {
 		this.id = id;
 		this.value = value;
 		this.marked = false;
+		this.inDegree = 0;
+		this.outDegree = 0;
+		this.component = 0; //Chequear en que valor deberia inicializar component
 		this.edges = new List<>();
 	}
+	
+	public int getNum() {
+		return num;
+	}
+
+	public void setNum(int num) {
+		this.num = num;
+	}
+
 	public K getId() {
 		return id;
 	}
@@ -33,6 +49,18 @@ public class Vertex<K extends Comparable<K>,V, A> implements Comparable<Vertex<K
 		this.marked = mark;
 	}
 	
+	public int getInDegree() {
+		return inDegree;
+	}
+	public void setInDegree(int inDegree) {
+		this.inDegree = inDegree;
+	}
+	public int getOutDegree() {
+		return outDegree;
+	}
+	public void setOutDegree(int outDegree) {
+		this.outDegree = outDegree;
+	}
 	public LinkedList<Edge<A>> getEdges() {
 		return this.edges;
 	}
@@ -41,6 +69,8 @@ public class Vertex<K extends Comparable<K>,V, A> implements Comparable<Vertex<K
 	}
 	public void addEdge(Vertex vertexFini, A infoEdge) {
 		// TODO Auto-generated method stub
+		this.outDegree++;
+		vertexFini.setInDegree(vertexFini.getInDegree()+1);
 		this.edges.add(new Edge<>(infoEdge, this, vertexFini)); //I add the edge to the list of edges of the Vertex. Just in ome direction (DirectedGraph)
 	}
 	

@@ -30,6 +30,7 @@ import model.data_structures.DiGraph;
 import model.data_structures.IDiGraph;
 import model.data_structures.LinkedList;
 import model.data_structures.List;
+import model.data_structures.Vertex;
 import model.vo.InfoEdge;
 import model.vo.InfoVertex;
 public class TaxiTripsManager implements ITaxiTripsManager
@@ -50,8 +51,6 @@ public class TaxiTripsManager implements ITaxiTripsManager
 
 
 	public TaxiTripsManager() {
-
-		graph = new DiGraph<>();
 
 	}
 
@@ -147,5 +146,27 @@ public class TaxiTripsManager implements ITaxiTripsManager
 		}
 
 		return this.graph;
+	}
+
+	@Override
+	public Vertex<String, InfoVertex, InfoEdge> verticeMasCongestionado() throws Exception{
+		// TODO Auto-generated method stub
+		Vertex<String,InfoVertex,InfoEdge> vertexToFind=null;
+		
+		int mayor = Integer.MIN_VALUE;
+		int total;
+		
+		if(this.graph == null) {
+			throw new Exception("Grafo aun no ha sido creado");
+		}
+		for(Vertex<String,InfoVertex,InfoEdge> v:this.graph.getListVertices()) {
+			total = v.getInDegree() + v.getOutDegree();
+			if(total > mayor) {
+				mayor = total;
+				vertexToFind = v;
+			}
+		}
+		
+		return vertexToFind;
 	}
 }

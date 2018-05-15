@@ -37,6 +37,7 @@ public class DiGraph<K extends Comparable<K>, V, A> implements IDiGraph<K,V,A>{
 		Vertex<K,V,A> vertex = this.vertices.get(idVertex);
 		if(vertex == null) { //I check if the vertex doesnt exist
 			vertex = new Vertex<K, V, A>(idVertex, infoVertex);
+			vertex.setNum(this.numVertices); //Le agrego un numero que permitira hacer mas facil los algoritmos
 			this.vertices.put(idVertex, vertex);
 			this.numVertices++;
 			this.listVertices.add(vertex); //I add the vertex to the list of vertices
@@ -73,6 +74,18 @@ public class DiGraph<K extends Comparable<K>, V, A> implements IDiGraph<K,V,A>{
 		
 		
 		return (V) vertex.getValue();
+	}
+	
+	public Vertex<K,V,A> getVertexByNum(int num) {
+		
+		for(Vertex v:this.listVertices) {
+			if(v.getNum() == num) {
+				return v;
+			}
+		}
+		
+		return null;
+		
 	}
 
 	@Override

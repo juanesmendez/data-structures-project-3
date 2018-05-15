@@ -5,6 +5,7 @@ import model.data_structures.IDiGraph;
 import model.data_structures.IQueue;
 import model.data_structures.IStack;
 import model.data_structures.LinkedList;
+import model.data_structures.Vertex;
 import model.logic.TaxiTripsManager;
 import model.vo.*;
 
@@ -17,6 +18,10 @@ public class Controller
 	
 	public static IDiGraph<String,InfoVertex,InfoEdge> cargarGrafo() {
 		return manager.cargarGrafo();
+	}
+	
+	public static Vertex<String,InfoVertex,InfoEdge> verticeMasCongestionado() throws Exception{
+		return manager.verticeMasCongestionado();
 	}
 	
 }
