@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -27,8 +28,10 @@ import com.sun.javafx.binding.StringFormatter;
 
 import api.ITaxiTripsManager;
 import javafx.util.converter.LocalDateStringConverter;
+import model.algorithms.DijkstraSP;
 import model.algorithms.KosarajuSharirSCC;
 import model.data_structures.DiGraph;
+import model.data_structures.Edge;
 import model.data_structures.IDiGraph;
 import model.data_structures.LinkedList;
 import model.data_structures.List;
@@ -92,8 +95,14 @@ public class TaxiTripsManager implements ITaxiTripsManager
 				JSONObject value = (JSONObject) object.get("value");
 				double latitudReferencia = (double) value.get("latitud_referencia");
 				double longitudReferencia = (double) value.get("longitud_referencia");
+				//------ Me aseguro que no se cree el vertice 0,0
+				if(latitudReferencia == 0 || longitudReferencia == 0) {
+					continue;
+				}
+				
+				
 				InfoVertex infoVertex = new InfoVertex(latitudReferencia, longitudReferencia);
-
+				
 				JSONArray arrayServicios = (JSONArray)value.get("servicios");
 				LinkedList<String> listaServicios = new List<>();
 				if(arrayServicios !=null) {
@@ -122,6 +131,23 @@ public class TaxiTripsManager implements ITaxiTripsManager
 					while(it.hasNext()) {
 						JSONObject edge = it.next();
 						InfoEdge infoEdge;
+						//----
+						/*
+						float distancia = Float.valueOf((String)edge.get("distancia"));
+						float valor = Float.valueOf((String)edge.get("valor"));
+						int contadorPeaje = Integer.parseInt((String)edge.get("contador_peaje"));
+						int segundos = Integer.parseInt((String)edge.get("segundos"));*/
+						//-----
+						
+						JSONObject value = (JSONObject) object.get("value");
+						double latitudReferencia = (double) value.get("latitud_referencia");
+						double longitudReferencia = (double) value.get("longitud_referencia");
+						//------ Me aseguro que no se creen los arcos del vertice 0,0
+						if(latitudReferencia == 0 || longitudReferencia == 0) {
+							continue;
+						}
+						
+						
 						double aux = (double) edge.get("distancia");
 						float distancia = (float)aux;
 						aux = (double) edge.get("valor");
@@ -130,7 +156,7 @@ public class TaxiTripsManager implements ITaxiTripsManager
 						int contadorPeaje = (int)auxLong;
 						auxLong = (long)edge.get("segundos");
 						int segundos = (int)auxLong;
-
+						
 						infoEdge = new InfoEdge(distancia, valor, segundos, contadorPeaje);
 
 						String keyInitialVertex = (String) edge.get("key_initial_vertex");
@@ -183,14 +209,14 @@ public class TaxiTripsManager implements ITaxiTripsManager
 					}
 					String[] coordinate = valor.split(" ");
 					if(coordinate.length == 3) {
-						String latitud = coordinate[1];
-						String longitud = coordinate[2];
+						String latitud = coordinate[2];
+						String longitud = coordinate[1];
 						coordinatesList.add(new Coordinate(Double.valueOf(latitud), Double.valueOf(longitud)));
-						
+
 					}
 					if(coordinate.length == 2) {
-						String latitud = coordinate[0];
-						String longitud = coordinate[1];
+						String latitud = coordinate[1];
+						String longitud = coordinate[0];
 						coordinatesList.add(new Coordinate(Double.valueOf(latitud), Double.valueOf(longitud)));
 					}
 				}
@@ -199,7 +225,7 @@ public class TaxiTripsManager implements ITaxiTripsManager
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
+
 	}
 
 	@Override
@@ -261,5 +287,81 @@ public class TaxiTripsManager implements ITaxiTripsManager
 		return listComponents;
 	}
 
+	@Override
+	public Iterable<Edge<InfoEdge>> encontrarCaminoMenorDistancia() {
+		// TODO Auto-generated method stub
+
+		Random randomGenerator = new Random();
+		int index1 = randomGenerator.nextInt(this.coordinatesList.size());
+		int index2 = randomGenerator.nextInt(this.coordinatesList.size());
+		
+		Coordinate initialCoordinate = this.coordinatesList.get(index1);
+		Coordinate finalCoordinate = this.coordinatesList.get(index2);
+		
+		//Recorrer vertices y encontrar vertice mas cercano a cada uno
+		double menor1 = Integer.MAX_VALUE;
+		double menor2 = Integer.MAX_VALUE;
+		
+		System.out.println();
+		System.out.println("Coordenada 1: " + initialCoordinate.getLatitude() + " "+initialCoordinate.getLongitude());
+		System.out.println("Coordenada 2: " + finalCoordinate.getLatitude() + " "+finalCoordinate.getLongitude());
+		System.out.println();
+		System.out.println("Menor 1 antes: "+menor1);
+		System.out.println("Menor 2 antes: "+menor2);
+		double distance1;
+		double distance2;
+		Vertex<String,InfoVertex,InfoEdge> initialVertex=null;
+		Vertex<String,InfoVertex,InfoEdge> finalVertex=null;
+		
+		for(Vertex<String,InfoVertex,InfoEdge> vertex:graph.getListVertices()) {
+			
+			distance1 = getHarvesianDistance(vertex.getValue().getLatitudReferencia(), vertex.getValue().getLongitudReferencia(), initialCoordinate.getLatitude(), initialCoordinate.getLongitude());
+			distance2 = getHarvesianDistance(vertex.getValue().getLatitudReferencia(), vertex.getValue().getLongitudReferencia(), finalCoordinate.getLatitude(), finalCoordinate.getLongitude());
+			System.out.println("Distance 1: "+distance1);
+			System.out.println("Distance 2: "+distance2);
+			System.out.println();
+			if(distance1 < menor1) {
+				menor1 = distance1;
+				initialVertex = vertex;
+			}
+			if(distance2 < menor2) {
+				menor2 = distance2;
+				finalVertex = vertex;
+			}
+			
+		}
+		System.out.println("Menor 1: "+menor1);
+		System.out.println("Menor 2: "+menor2);
+		System.out.println("INITIAL VERTEX:");
+		System.out.println("Num: "+initialVertex.getNum());
+		System.out.println("Latitud: "+initialVertex.getValue().getLatitudReferencia());
+		System.out.println("Longitud: "+initialVertex.getValue().getLongitudReferencia());
+		System.out.println();
+		System.out.println("FINAL VERTEX:");
+		System.out.println("Num: "+finalVertex.getNum());
+		System.out.println("Latitud: "+finalVertex.getValue().getLatitudReferencia());
+		System.out.println("Longitud: "+finalVertex.getValue().getLongitudReferencia());
+		System.out.println();
+		//Crear dijstra apartir del vertice inicial
+		
+		DijkstraSP<String, InfoVertex, InfoEdge> dijkstra = new DijkstraSP<>(this.graph, initialVertex, "distancia");
+		Iterable<Edge<InfoEdge>> path = dijkstra.pathTo(finalVertex);
+		
+		
+		return path;
+	}
+	
+	
+	public static double getHarvesianDistance(double lat1, double lon1, double lat2, double lon2)
+	{
+		// TODO Auto-generated method stub
+		final int R = 6371*1000; // Radious of the earth in meters
+		Double latDistance = Math.toRadians(lat2-lat1);
+		Double lonDistance = Math.toRadians(lon2-lon1);
+		Double a = Math.sin(latDistance/2) * Math.sin(latDistance/2) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.sin(lonDistance/2) * Math.sin(lonDistance/2);
+		Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+		Double distance = R * c;
+		return distance;
+	}
 
 }

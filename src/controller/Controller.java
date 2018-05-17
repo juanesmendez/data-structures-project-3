@@ -1,6 +1,7 @@
 package controller;
 
 import api.ITaxiTripsManager;
+import model.data_structures.Edge;
 import model.data_structures.IDiGraph;
 import model.data_structures.IQueue;
 import model.data_structures.IStack;
@@ -26,6 +27,10 @@ public class Controller
 	
 	public static LinkedList<Component<String,InfoVertex,InfoEdge>> calcularComponentesFuertementeConexos() throws Exception{
 		return manager.calcularComponentesFuertementeConexos();
+	}
+	
+	public static Iterable<Edge<InfoEdge>> encontrarCaminoMenorDistancia(){
+		return manager.encontrarCaminoMenorDistancia();
 	}
 	
 }

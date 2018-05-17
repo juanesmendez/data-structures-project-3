@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
@@ -20,6 +21,7 @@ import com.teamdev.jxbrowser.chromium.Browser;
 import controller.Controller;
 import model.algorithms.DepthFirstSearch;
 import model.data_structures.DiGraph;
+import model.data_structures.Edge;
 import model.data_structures.IDiGraph;
 import model.data_structures.LinkedList;
 import model.data_structures.Vertex;
@@ -77,7 +79,7 @@ public class TaxiTripsManagerView
 					//System.out.println("Latitud:"+info.getLatitudReferencia());
 					System.out.println();
 				}*/
-				
+
 				break;
 			case 1:
 
@@ -134,7 +136,7 @@ public class TaxiTripsManagerView
 					System.out.println();
 					System.out.println("COMPONENTE MAS GRANDE: ");
 					System.out.println(componenteMasGrande.toString());
-
+					System.out.println();
 					url = GOOGLE_STATIC_MAPS_API;
 					center = "center="+41.881832+","+-87.623177;
 					zoom = "zoom=10";
@@ -165,8 +167,86 @@ public class TaxiTripsManagerView
 
 				break;
 
-
 			case 3:
+
+				break;
+			case 4:
+				Iterable<Edge<InfoEdge>> path = Controller.encontrarCaminoMenorDistancia();
+				System.out.println();
+				url = GOOGLE_STATIC_MAPS_API;
+				//center = "center="+vertex.getValue().getLatitudReferencia()+","+vertex.getValue().getLongitudReferencia();
+				zoom = "zoom=12";
+				size = "size=600x600";
+				String scale = "scale=1";
+				markers = "markers=size:mid%7Ccolor:green%7C";
+				key = "key="+API_KEY;
+				String pathString = "path=color:0x0000ff%7Cweight:5%7C";
+				
+				float tiempoEstimado = 0;
+				float distanciaEstimada = 0;
+				float valorEstimado=0;
+				Iterator it = path.iterator();
+				Vertex<String,InfoVertex,InfoEdge> verticeInicial = null;
+				Vertex<String,InfoVertex,InfoEdge> verticeFinal = null;
+				if(it.hasNext()) {
+					int k=0;
+					for(Edge<InfoEdge> e:path) {
+						System.out.println(e.getInitialVertex().getNum() + " -> "+ e.getFinalVertex().getNum()+"    "+e.getWeight().getDistancia());
+
+						if(k==0) {
+							verticeInicial = e.getInitialVertex();
+							Vertex<String,InfoVertex,InfoEdge> initialV = e.getInitialVertex();
+							Vertex<String,InfoVertex,InfoEdge> finalV = e.getFinalVertex();
+
+							pathString = pathString+initialV.getValue().getLatitudReferencia()+","+initialV.getValue().getLongitudReferencia()+"%7C"+finalV.getValue().getLatitudReferencia()+","+finalV.getValue().getLongitudReferencia()+"%7C";
+							tiempoEstimado += e.getWeight().getSegundos();
+							distanciaEstimada += e.getWeight().getDistancia();
+							valorEstimado += e.getWeight().getValor();
+							
+							k++;
+							continue;
+						}
+
+						Vertex<String,InfoVertex,InfoEdge> finalV = e.getFinalVertex();
+
+						pathString = pathString+finalV.getValue().getLatitudReferencia()+","+finalV.getValue().getLongitudReferencia()+"%7C";
+						tiempoEstimado += e.getWeight().getSegundos();
+						distanciaEstimada += e.getWeight().getDistancia();
+						valorEstimado += e.getWeight().getValor();
+						
+						k++;
+					}
+					
+					Iterator it2 = path.iterator();
+					while(it2.hasNext()) {
+						Edge<InfoEdge> edge = (Edge<InfoEdge>) it2.next();
+						if(it2.hasNext() == false) {
+							verticeFinal=edge.getFinalVertex();
+						}
+						
+					}
+					
+					
+					
+					System.out.println("Vertice inicial: "+verticeInicial.getValue().getLatitudReferencia()+","+verticeInicial.getValue().getLongitudReferencia()+ " "+verticeInicial.getNum());
+					System.out.println("Vertice final: "+verticeFinal.getValue().getLatitudReferencia()+","+verticeFinal.getValue().getLongitudReferencia()+ " "+verticeFinal.getNum());
+					pathString = pathString.substring(0, pathString.length()-3);
+					markers = markers+verticeInicial.getValue().getLatitudReferencia()+","+verticeInicial.getValue().getLongitudReferencia();
+					markers = markers+"&"+"markers=size:mid%7Ccolor:red%7C"+verticeFinal.getValue().getLatitudReferencia()+","+verticeFinal.getValue().getLongitudReferencia();
+					url = url+"&"+size+"&"+scale+"&"+markers+"&"+pathString+"&"+key;
+					System.out.println();
+					System.out.println("Tiempo estimado: "+tiempoEstimado+" segundos");
+					System.out.println("Distancia Estimada: "+distanciaEstimada+" millas");
+					System.out.println("Valor estimado: $"+valorEstimado);
+
+					launchMap(url);
+				}else {
+					System.out.println("No se puede generar camino en el mapa por que no existe conexion entre los vertices aleatorios.");
+				}
+
+				break;
+
+			case 5:
 				fin=true;
 				sc.close();
 				break;
@@ -180,29 +260,31 @@ public class TaxiTripsManagerView
 		System.out.println("0. Cargar grafo apartir de archivo JSON");
 		System.out.println("1. Mostrar informacion del vertice mas congestionado en Chicago.");
 		System.out.println("2. Calcular componentes fuertemente conexas.");
-		System.out.println("3. Salir");
+		System.out.println("3. Generar mapa coloreado de la red vial de Chicago");
+		System.out.println("4. Encontrar camino de costo minimo (menor distancia) entre dos coordenadas aleatorias.");
+		System.out.println("5. Salir");
 		System.out.println("Digite el n�mero de opci�n para ejecutar la tarea, luego presione enter: (Ej., 1):");
 
 	}
-	
+
 	private static void launchMap(String url) {
-		
+
 		try {
-		URL obj = new URL(url);
+			URL obj = new URL(url);
 
-		HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-		con.setRequestMethod("GET");
-		int responseCode = con.getResponseCode();
-		System.out.println("\nSending GET request to URL: "+url);
-		System.out.println("Response code: "+responseCode);
-		System.out.println("Content Type: "+con.getContentType());
+			HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+			con.setRequestMethod("GET");
+			int responseCode = con.getResponseCode();
+			System.out.println("\nSending GET request to URL: "+url);
+			System.out.println("Response code: "+responseCode);
+			System.out.println("Content Type: "+con.getContentType());
 
-		//URLImageSource img = (URLImageSource) con.getContent();
-		BufferedImage imgb = ImageIO.read(con.getInputStream());
-		ImageIcon iIcon = new ImageIcon(imgb.getScaledInstance(imgb.getWidth(), imgb.getHeight(), Image.SCALE_DEFAULT));
+			//URLImageSource img = (URLImageSource) con.getContent();
+			BufferedImage imgb = ImageIO.read(con.getInputStream());
+			ImageIcon iIcon = new ImageIcon(imgb.getScaledInstance(imgb.getWidth(), imgb.getHeight(), Image.SCALE_DEFAULT));
 
 
-		Map map = new Map(iIcon);
+			Map map = new Map(iIcon);
 		}catch(Exception e) {
 			e.printStackTrace();
 		}

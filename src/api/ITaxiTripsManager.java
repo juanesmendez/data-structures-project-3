@@ -16,6 +16,8 @@ public interface ITaxiTripsManager
 	public Vertex<String,InfoVertex,InfoEdge> verticeMasCongestionado() throws Exception;
 	
 	public LinkedList<Component<String,InfoVertex,InfoEdge>> calcularComponentesFuertementeConexos() throws Exception;
+	
+	public Iterable<Edge<InfoEdge>> encontrarCaminoMenorDistancia();
 
 
 }
