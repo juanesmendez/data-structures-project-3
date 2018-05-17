@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
 import org.json.simple.JSONArray;
@@ -33,8 +34,12 @@ import model.data_structures.LinkedList;
 import model.data_structures.List;
 import model.data_structures.Vertex;
 import model.vo.Component;
+import model.vo.Coordinate;
 import model.vo.InfoEdge;
 import model.vo.InfoVertex;
+
+import com.google.*;
+import com.google.maps.model.Bounds;
 public class TaxiTripsManager implements ITaxiTripsManager
 {
 
@@ -48,9 +53,15 @@ public class TaxiTripsManager implements ITaxiTripsManager
 	public static final String DIRECCION_LARGE_JSON_DIA_5 = "./data/taxi-trips-wrvz-psew-subset-large/taxi-trips-wrvz-psew-subset-06-02-2017.json";
 	public static final String DIRECCION_LARGE_JSON_DIA_6 = "./data/taxi-trips-wrvz-psew-subset-large/taxi-trips-wrvz-psew-subset-07-02-2017.json";
 	public static final String DIRECCION_LARGE_JSON_DIA_7 = "./data/taxi-trips-wrvz-psew-subset-large/taxi-trips-wrvz-psew-subset-08-02-2017.json";
+	public static final String DIRECCION_CHICAGO_STREETS = "./data/chicago-streets.csv";
+
+
+	public static final String GOOGLE_STATIC_MAPS_API = "https://maps.googleapis.com/maps/api/staticmap?";
+
+
 
 	private IDiGraph<String, InfoVertex, InfoEdge> graph;
-
+	private LinkedList<Coordinate> coordinatesList;
 
 	public TaxiTripsManager() {
 
@@ -147,17 +158,58 @@ public class TaxiTripsManager implements ITaxiTripsManager
 
 		}
 
+		//Cargar .csv con las calles
+
+		this.cargarChicagoStreets();
+
 		return this.graph;
+	}
+
+	@Override
+	public void cargarChicagoStreets() {
+		// TODO Auto-generated method stub
+		this.coordinatesList = new List<>();
+		String fileName = DIRECCION_CHICAGO_STREETS;
+		File file = new File(fileName);
+		try {
+			Scanner inputStream = new Scanner(file);
+			while(inputStream.hasNext()) {
+				String data = inputStream.nextLine();	
+				String[] values = data.split(";");
+				for(int i=6;i<values.length;i++) { // Empieza en 6 por que solo me interesan las coordenadas.
+					String valor = values[i];
+					if(valor.equals("")) { //Si no hay coordenadas, simplemente ignorar
+						continue;
+					}
+					String[] coordinate = valor.split(" ");
+					if(coordinate.length == 3) {
+						String latitud = coordinate[1];
+						String longitud = coordinate[2];
+						coordinatesList.add(new Coordinate(Double.valueOf(latitud), Double.valueOf(longitud)));
+						
+					}
+					if(coordinate.length == 2) {
+						String latitud = coordinate[0];
+						String longitud = coordinate[1];
+						coordinatesList.add(new Coordinate(Double.valueOf(latitud), Double.valueOf(longitud)));
+					}
+				}
+			}
+			inputStream.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 	}
 
 	@Override
 	public Vertex<String, InfoVertex, InfoEdge> verticeMasCongestionado() throws Exception{
 		// TODO Auto-generated method stub
 		Vertex<String,InfoVertex,InfoEdge> vertexToFind=null;
-		
+
 		int mayor = Integer.MIN_VALUE;
 		int total;
-		
+
 		if(this.graph == null) {
 			throw new Exception("Grafo aun no ha sido creado");
 		}
@@ -168,43 +220,46 @@ public class TaxiTripsManager implements ITaxiTripsManager
 				vertexToFind = v;
 			}
 		}
-		
+
 		return vertexToFind;
 	}
 
 	@Override
-	public LinkedList<Component> calcularComponentesFuertementeConexos() throws Exception {
+	public LinkedList<Component<String,InfoVertex,InfoEdge>> calcularComponentesFuertementeConexos() throws Exception {
 		// TODO Auto-generated method stub
-		LinkedList<Component> listComponents = new List<Component>();
-		Component comp;
-		Component aux;
-		
+		LinkedList<Component<String,InfoVertex,InfoEdge>> listComponents = new List<Component<String,InfoVertex,InfoEdge>>();
+		Component<String,InfoVertex,InfoEdge> comp;
+		Component<String,InfoVertex,InfoEdge> aux;
+
 		if(this.graph == null) {
 			throw new Exception("Grafo aun no ha sido creado");
 		}
 		KosarajuSharirSCC<String, InfoVertex, InfoEdge> kosarajuSharir = new KosarajuSharirSCC<>(graph);
-		
+
 		int[] array = kosarajuSharir.getId();
-		
+
 		for(int i=0;i<array.length;i++) {
 			System.out.println(array[i]);
 			int color = array[i];
-			comp = new Component(color);
+			comp = new Component<String,InfoVertex,InfoEdge>(color);
 			aux = listComponents.get(comp);
-			
+
 			if(aux == null) {
 				aux = comp;
 				aux.agregarVertice();
+				aux.addVertex(this.graph.getVertexByNum(i));
 				listComponents.add(aux);
 			}else {
 				aux.agregarVertice();
+				aux.addVertex(this.graph.getVertexByNum(i));
 			}
 		}
 		System.out.println("ARRAY SIZE: "+array.length);
-		
-		
-		
-		
+
+
+
 		return listComponents;
 	}
+
+
 }

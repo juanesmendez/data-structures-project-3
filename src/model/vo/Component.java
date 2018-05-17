@@ -1,13 +1,23 @@
 package model.vo;
 
-public class Component implements Comparable<Component>{
+import java.awt.List;
+
+import model.data_structures.HashTableLP;
+import model.data_structures.IHashTableLP;
+import model.data_structures.LinkedList;
+import model.data_structures.Vertex;
+
+public class Component<K extends Comparable<K>,V,A> implements Comparable<Component<K,V,A>>{
 	
 	private int color;
 	private int numVertices;
+	private IHashTableLP<Integer,Vertex<K,V,A>> hashTableVertices;
 	
 	public Component(int color) {
 		this.color = color;
 		this.numVertices = 0;
+		this.hashTableVertices = new HashTableLP<>();
+		
 	}
 	public int getColor() {
 		return color;
@@ -20,6 +30,13 @@ public class Component implements Comparable<Component>{
 	}
 	public void setNumVertices(int numVertices) {
 		this.numVertices = numVertices;
+	}
+	
+	public IHashTableLP<Integer, Vertex<K, V, A>> getHashTableVertices() {
+		return hashTableVertices;
+	}
+	public void setHashTableVertices(IHashTableLP<Integer, Vertex<K, V, A>> hashTableVertices) {
+		this.hashTableVertices = hashTableVertices;
 	}
 	@Override
 	public int compareTo(Component o) {
@@ -42,6 +59,8 @@ public class Component implements Comparable<Component>{
 		this.numVertices++;
 	}
 	
-	
+	public void addVertex(Vertex<K,V,A> vertex) {
+		this.hashTableVertices.put(vertex.getNum(), vertex);
+	}
 	
 }

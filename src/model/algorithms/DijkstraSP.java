@@ -11,6 +11,7 @@ import model.data_structures.Vertex;
 import model.vo.InfoEdge;
 
 //Solo funcionara con el tipo InfoEdge
+
 public class DijkstraSP<K extends Comparable<K>,V,A> {
 
 	private Edge<InfoEdge>[] edgeTo;

@@ -24,7 +24,7 @@ public class Controller
 		return manager.verticeMasCongestionado();
 	}
 	
-	public static LinkedList<Component> calcularComponentesFuertementeConexos() throws Exception{
+	public static LinkedList<Component<String,InfoVertex,InfoEdge>> calcularComponentesFuertementeConexos() throws Exception{
 		return manager.calcularComponentesFuertementeConexos();
 	}
 	
