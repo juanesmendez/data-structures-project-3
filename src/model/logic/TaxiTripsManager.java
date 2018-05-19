@@ -40,6 +40,7 @@ import model.vo.Component;
 import model.vo.Coordinate;
 import model.vo.InfoEdge;
 import model.vo.InfoVertex;
+import model.vo.Path;
 
 import com.google.*;
 import com.google.maps.model.Bounds;
@@ -99,10 +100,10 @@ public class TaxiTripsManager implements ITaxiTripsManager
 				if(latitudReferencia == 0 || longitudReferencia == 0) {
 					continue;
 				}
-				
-				
+
+
 				InfoVertex infoVertex = new InfoVertex(latitudReferencia, longitudReferencia);
-				
+
 				JSONArray arrayServicios = (JSONArray)value.get("servicios");
 				LinkedList<String> listaServicios = new List<>();
 				if(arrayServicios !=null) {
@@ -138,7 +139,7 @@ public class TaxiTripsManager implements ITaxiTripsManager
 						int contadorPeaje = Integer.parseInt((String)edge.get("contador_peaje"));
 						int segundos = Integer.parseInt((String)edge.get("segundos"));*/
 						//-----
-						
+
 						JSONObject value = (JSONObject) object.get("value");
 						double latitudReferencia = (double) value.get("latitud_referencia");
 						double longitudReferencia = (double) value.get("longitud_referencia");
@@ -146,8 +147,8 @@ public class TaxiTripsManager implements ITaxiTripsManager
 						if(latitudReferencia == 0 || longitudReferencia == 0) {
 							continue;
 						}
-						
-						
+
+
 						double aux = (double) edge.get("distancia");
 						float distancia = (float)aux;
 						aux = (double) edge.get("valor");
@@ -156,7 +157,7 @@ public class TaxiTripsManager implements ITaxiTripsManager
 						int contadorPeaje = (int)auxLong;
 						auxLong = (long)edge.get("segundos");
 						int segundos = (int)auxLong;
-						
+
 						infoEdge = new InfoEdge(distancia, valor, segundos, contadorPeaje);
 
 						String keyInitialVertex = (String) edge.get("key_initial_vertex");
@@ -288,38 +289,29 @@ public class TaxiTripsManager implements ITaxiTripsManager
 	}
 
 	@Override
-	public Iterable<Edge<InfoEdge>> encontrarCaminoMenorDistancia() {
+	public Path encontrarCaminoMenorDistancia() {
 		// TODO Auto-generated method stub
-
+		Path path;
 		Random randomGenerator = new Random();
 		int index1 = randomGenerator.nextInt(this.coordinatesList.size());
 		int index2 = randomGenerator.nextInt(this.coordinatesList.size());
-		
+
 		Coordinate initialCoordinate = this.coordinatesList.get(index1);
 		Coordinate finalCoordinate = this.coordinatesList.get(index2);
-		
+
 		//Recorrer vertices y encontrar vertice mas cercano a cada uno
 		double menor1 = Integer.MAX_VALUE;
 		double menor2 = Integer.MAX_VALUE;
-		
-		System.out.println();
-		System.out.println("Coordenada 1: " + initialCoordinate.getLatitude() + " "+initialCoordinate.getLongitude());
-		System.out.println("Coordenada 2: " + finalCoordinate.getLatitude() + " "+finalCoordinate.getLongitude());
-		System.out.println();
-		System.out.println("Menor 1 antes: "+menor1);
-		System.out.println("Menor 2 antes: "+menor2);
+
 		double distance1;
 		double distance2;
 		Vertex<String,InfoVertex,InfoEdge> initialVertex=null;
 		Vertex<String,InfoVertex,InfoEdge> finalVertex=null;
-		
+
 		for(Vertex<String,InfoVertex,InfoEdge> vertex:graph.getListVertices()) {
-			
+
 			distance1 = getHarvesianDistance(vertex.getValue().getLatitudReferencia(), vertex.getValue().getLongitudReferencia(), initialCoordinate.getLatitude(), initialCoordinate.getLongitude());
 			distance2 = getHarvesianDistance(vertex.getValue().getLatitudReferencia(), vertex.getValue().getLongitudReferencia(), finalCoordinate.getLatitude(), finalCoordinate.getLongitude());
-			System.out.println("Distance 1: "+distance1);
-			System.out.println("Distance 2: "+distance2);
-			System.out.println();
 			if(distance1 < menor1) {
 				menor1 = distance1;
 				initialVertex = vertex;
@@ -328,30 +320,74 @@ public class TaxiTripsManager implements ITaxiTripsManager
 				menor2 = distance2;
 				finalVertex = vertex;
 			}
-			
+
 		}
-		System.out.println("Menor 1: "+menor1);
-		System.out.println("Menor 2: "+menor2);
-		System.out.println("INITIAL VERTEX:");
-		System.out.println("Num: "+initialVertex.getNum());
-		System.out.println("Latitud: "+initialVertex.getValue().getLatitudReferencia());
-		System.out.println("Longitud: "+initialVertex.getValue().getLongitudReferencia());
-		System.out.println();
-		System.out.println("FINAL VERTEX:");
-		System.out.println("Num: "+finalVertex.getNum());
-		System.out.println("Latitud: "+finalVertex.getValue().getLatitudReferencia());
-		System.out.println("Longitud: "+finalVertex.getValue().getLongitudReferencia());
-		System.out.println();
 		//Crear dijstra apartir del vertice inicial
-		
+
 		DijkstraSP<String, InfoVertex, InfoEdge> dijkstra = new DijkstraSP<>(this.graph, initialVertex, "distancia");
-		Iterable<Edge<InfoEdge>> path = dijkstra.pathTo(finalVertex);
+		Iterable<Edge<InfoEdge>> pathIterable = dijkstra.pathTo(finalVertex);
+		path = new Path(pathIterable); //Lo meto en un objeto de tipo Path
 		
-		
+
 		return path;
 	}
-	
-	
+
+	@Override
+	public Path[] caminosMayorMenorDuracion() {
+		// TODO Auto-generated method stub
+		Path[] paths = new Path[2];
+		Path path1;
+		Path path2;
+		//Iterable<Edge<InfoEdge>>[] array = new Iterable<Edge<InfoEdge>>[2];
+		Random randomGenerator = new Random();
+		int index1 = randomGenerator.nextInt(this.coordinatesList.size());
+		int index2 = randomGenerator.nextInt(this.coordinatesList.size());
+
+		Coordinate initialCoordinate = this.coordinatesList.get(index1);
+		Coordinate finalCoordinate = this.coordinatesList.get(index2);
+
+		//Recorrer vertices y encontrar vertice mas cercano a cada uno
+		double menor1 = Integer.MAX_VALUE;
+		double menor2 = Integer.MAX_VALUE;
+
+		double distance1;
+		double distance2;
+		Vertex<String,InfoVertex,InfoEdge> initialVertex=null;
+		Vertex<String,InfoVertex,InfoEdge> finalVertex=null;
+		
+		Iterable<Edge<InfoEdge>> aux;
+		DijkstraSP<String, InfoVertex, InfoEdge> dijkstra;
+
+		for(Vertex<String,InfoVertex,InfoEdge> vertex:graph.getListVertices()) {
+
+			distance1 = getHarvesianDistance(vertex.getValue().getLatitudReferencia(), vertex.getValue().getLongitudReferencia(), initialCoordinate.getLatitude(), initialCoordinate.getLongitude());
+			distance2 = getHarvesianDistance(vertex.getValue().getLatitudReferencia(), vertex.getValue().getLongitudReferencia(), finalCoordinate.getLatitude(), finalCoordinate.getLongitude());
+			if(distance1 < menor1) {
+				menor1 = distance1;
+				initialVertex = vertex;
+			}
+			if(distance2 < menor2) {
+				menor2 = distance2;
+				finalVertex = vertex;
+			}
+
+		}
+		
+		dijkstra = new DijkstraSP<>(this.graph, initialVertex, "duracion");
+		
+		aux = dijkstra.pathTo(finalVertex);
+		path1 = new Path(aux);
+		paths[0] = path1;
+		
+		dijkstra = new DijkstraSP<>(this.graph, finalVertex, "duracion");
+		aux = dijkstra.pathTo(initialVertex);
+		path2 = new Path(aux);
+		paths[1] = path2;
+		
+		
+		return paths;
+	}
+
 	public static double getHarvesianDistance(double lat1, double lon1, double lat2, double lon2)
 	{
 		// TODO Auto-generated method stub
@@ -363,5 +399,7 @@ public class TaxiTripsManager implements ITaxiTripsManager
 		Double distance = R * c;
 		return distance;
 	}
+
+
 
 }

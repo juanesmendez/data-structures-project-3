@@ -29,8 +29,12 @@ public class Controller
 		return manager.calcularComponentesFuertementeConexos();
 	}
 	
-	public static Iterable<Edge<InfoEdge>> encontrarCaminoMenorDistancia(){
+	public static Path encontrarCaminoMenorDistancia(){
 		return manager.encontrarCaminoMenorDistancia();
+	}
+	
+	public static Path[] caminosMayorMenorDuracion(){
+		return manager.caminosMayorMenorDuracion();
 	}
 	
 }
