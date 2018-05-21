@@ -1,8 +1,9 @@
 package model.vo;
 import model.data_structures.*;
 
-public class Path {
-	private Stack<Edge<InfoEdge>> edges;
+public class Path implements Comparable<Path>{
+	private Stack<Edge<InfoEdge>> edges; //Se utiliza para Dijkstra
+	private LinkedList<Edge<InfoEdge>> edgesList; //Se utiliza para encontrar todos los caminos
 	private int segundos;
 	private float distancia;
 	private float valor;
@@ -14,7 +15,31 @@ public class Path {
 		this.valor = 0;
 		this.calculate();
 	}
+	
+	public Path(LinkedList<Edge<InfoEdge>> edges ) {
+		this.edgesList = edges;
+		this.segundos = 0;
+		this.distancia = 0;
+		this.valor = 0;
+		this.calculateInfo();
+	}
+	
+	private void calculateInfo() {
+		// TODO Auto-generated method stub
+		for(Edge<InfoEdge> e:this.edgesList) {
+			segundos += e.getWeight().getSegundos();
+			distancia += e.getWeight().getDistancia();
+			valor += e.getWeight().getValor();
+		}
+	}
 
+	private void addEdge(Edge<InfoEdge> e) {
+		this.edgesList.add(e);
+		this.segundos += e.getWeight().getSegundos();
+		this.distancia += e.getWeight().getDistancia();
+		this.valor += e.getWeight().getValor();
+	}
+	
 	private void calculate() {
 		// TODO Auto-generated method stub
 		for(Edge<InfoEdge> e:this.edges) {
@@ -55,5 +80,31 @@ public class Path {
 	public void setValor(float valor) {
 		this.valor = valor;
 	}
+
+	public LinkedList<Edge<InfoEdge>> getEdgesList() {
+		return edgesList;
+	}
+
+	public void setEdgesList(LinkedList<Edge<InfoEdge>> edgesList) {
+		this.edgesList = edgesList;
+	}
+
+	@Override
+	public int compareTo(Path o) {
+		// TODO Auto-generated method stub
+		if(this.segundos < o.segundos) {
+			return -1;
+		}else if(this.segundos > o.segundos) {
+			return 1;
+		}else if(this.valor < o.valor) { // Alrevez para que los ordene de mayor a menor por valor del viaje
+			return 1;
+		}else if(this.valor > o.valor) {
+			return -1;
+		}
+		
+		return 0;
+	}
+	
+	
 	
 }

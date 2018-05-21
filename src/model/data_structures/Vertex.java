@@ -67,6 +67,15 @@ public class Vertex<K extends Comparable<K>,V, A> implements Comparable<Vertex<K
 	public void setEdges(LinkedList<Edge<A>> edges) {
 		this.edges = edges;
 	}
+	
+	public int getComponent() {
+		return component;
+	}
+
+	public void setComponent(int component) {
+		this.component = component;
+	}
+
 	public void addEdge(Vertex vertexFini, A infoEdge) {
 		// TODO Auto-generated method stub
 		this.outDegree++;
@@ -77,6 +86,11 @@ public class Vertex<K extends Comparable<K>,V, A> implements Comparable<Vertex<K
 	@Override
 	public int compareTo(Vertex<K, V, A> o) {
 		// TODO Auto-generated method stub
+		if(this.getNum() < o.getNum()) {
+			return -1;
+		}else if(this.getNum() > o.getNum()) {
+			return 1;
+		}
 		return 0;
 	}
 }

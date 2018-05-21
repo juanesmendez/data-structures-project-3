@@ -76,4 +76,6 @@ public interface IDiGraph<K extends Comparable<K>,V,A> {
 	public LinkedList<K> getListVertexKeys();
 	
 	public Iterable<Vertex<K,V,A>> getListVertices();
+	
+	public IHashTableLP<Integer,Vertex<K,V,A>> getVerticesHashTableByNum();
 }

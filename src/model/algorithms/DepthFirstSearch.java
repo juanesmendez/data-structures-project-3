@@ -29,4 +29,6 @@ public class DepthFirstSearch<K extends Comparable<K>,V,A> {
 	public boolean visited(Vertex<K,V,A> v) {
 		return marked[v.getNum()];
 	}
+	
+	
 }

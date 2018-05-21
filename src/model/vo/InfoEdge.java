@@ -1,5 +1,7 @@
 package model.vo;
 
+import model.data_structures.Edge;
+
 public class InfoEdge {
 	
 	private float distancia;  //Distancia en metros del servicio (Si hay mas de un servicio entonces es el promedio de distancias)
@@ -67,6 +69,26 @@ public class InfoEdge {
 		if(nuevoPeaje) {
 			contPeaje++;
 		}
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		
+		if(this == obj) {
+			return true;
+		}
+		if(obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass())
+			return false;
+		InfoEdge other = (InfoEdge) obj;
+		
+		if((this.distancia == other.distancia) && (this.valor == other.valor) && (this.segundos == other.segundos) && (this.contPeaje == other.contPeaje)){
+			return true;
+		}
+		return false;
 	}
 	
 	

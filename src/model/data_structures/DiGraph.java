@@ -10,6 +10,9 @@ public class DiGraph<K extends Comparable<K>, V, A> implements IDiGraph<K,V,A>{
 	private LinkedList<Vertex<K,V,A>> listVertices; //Para trabajar internamente la marcada de los vertices
 	private LinkedList<K> listVerticesKeys;
 	
+	//Chequer lo siguiente:
+	private IHashTableLP<Integer,Vertex<K,V,A>> verticesByNum;
+	
 	public DiGraph() {
 		this.vertices = new HashTableLP<K,Vertex<K,V,A>>();
 		this.listVertices = new List<Vertex<K,V,A>>();
@@ -17,6 +20,8 @@ public class DiGraph<K extends Comparable<K>, V, A> implements IDiGraph<K,V,A>{
 		this.numVertices=0;
 		this.numEdges = 0;
 		
+		//Chequear esto:
+		this.verticesByNum = new HashTableLP<Integer,Vertex<K,V,A>>();
 	}
 	
 	@Override
@@ -42,6 +47,8 @@ public class DiGraph<K extends Comparable<K>, V, A> implements IDiGraph<K,V,A>{
 			this.numVertices++;
 			this.listVertices.add(vertex); //I add the vertex to the list of vertices
 			this.listVerticesKeys.add(idVertex);
+			//Chequear lo siguiente:
+			this.verticesByNum.put(vertex.getNum(), vertex);
 		}
 	}
 
@@ -208,6 +215,10 @@ public class DiGraph<K extends Comparable<K>, V, A> implements IDiGraph<K,V,A>{
 		// TODO Auto-generated method stub
 		Iterable<Vertex<K, V, A>> returnList = this.listVertices;
 		return returnList;
+	}
+	
+	public IHashTableLP<Integer,Vertex<K,V,A>> getVerticesHashTableByNum(){
+		return this.verticesByNum;
 	}
 
 	

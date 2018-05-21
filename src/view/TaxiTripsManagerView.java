@@ -144,7 +144,7 @@ public class TaxiTripsManagerView
 					size = "size=400x400";
 					String scale2 = "scale=2";
 					markers = "markers=size:tiny%7C";
-
+					String pathComponents = "";
 					key = API_KEY;
 
 					for(Integer n:componenteMasGrande.getHashTableVertices().keys()) {
@@ -155,10 +155,22 @@ public class TaxiTripsManagerView
 						markers = markers+v.getValue().getLatitudReferencia()+","+v.getValue().getLongitudReferencia()+"%7C";
 					}
 					markers = markers.substring(0, markers.length()-3);
-					System.out.println("markers value: "+markers);
-
+					//System.out.println("markers value: "+markers);
+					
+					for(Integer inte:componenteMasGrande.getHashTableVertices().keys()) {
+						Vertex<String,InfoVertex,InfoEdge> vert = componenteMasGrande.getHashTableVertices().get(inte);
+						for(Edge<InfoEdge> e: vert.getEdges()) {
+							Vertex<String,InfoVertex,InfoEdge> finalVer = e.getFinalVertex();
+							
+							pathComponents += "path=color:0x0000ff%7Cweight:5%7C" + vert.getValue().getLatitudReferencia() + ","+vert.getValue().getLongitudReferencia() + "%7C" + finalVer.getValue().getLatitudReferencia() + "," + finalVer.getValue().getLongitudReferencia()+"&";
+						}
+					}
+					
+					pathComponents = pathComponents.substring(0, pathComponents.length()-1);
+					//System.out.println("Path components: "+pathComponents);
 					//url = url+center+"&"+zoom+"&"+size+"&"+markers+"&"+key;
-					url = url+size+"&"+scale2+"&"+markers+"&"+key;
+					url = url+size+"&"+scale2+"&"+markers+"&"+key; //Agregar pathcomponents
+					//System.out.println("Tamaño url: "+url.length());
 					launchMap(url);
 
 				} catch (Exception e) {
@@ -169,7 +181,14 @@ public class TaxiTripsManagerView
 				break;
 
 			case 3:
-
+				
+				try {
+					Controller.Req3GenerarMapaComponentes();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 				break;
 			case 4:
 				Path path = Controller.encontrarCaminoMenorDistancia();
@@ -398,7 +417,22 @@ public class TaxiTripsManagerView
 				break;
 
 			case 6:
-
+				
+				LinkedList<Path> paths = Controller.Req6CaminosSinPeaje();
+				
+				
+				/*
+				System.out.println("Size list: "+paths.size());
+				for(Path p: paths) {
+					for(Edge<InfoEdge> e : p.getEdgesList()) {
+						Vertex<String,InfoVertex,InfoEdge> v1 = e.getInitialVertex();
+						Vertex<String,InfoVertex,InfoEdge> v2 = e.getFinalVertex();
+						System.out.println(v1.getNum() + "->" + v2.getNum());
+					}
+					System.out.println();
+				}*/
+				
+				
 				break;
 
 			case 7:
@@ -435,7 +469,7 @@ public class TaxiTripsManagerView
 			System.out.println("\nSending GET request to URL: "+url);
 			System.out.println("Response code: "+responseCode);
 			System.out.println("Content Type: "+con.getContentType());
-
+			
 			//URLImageSource img = (URLImageSource) con.getContent();
 			BufferedImage imgb = ImageIO.read(con.getInputStream());
 			ImageIcon iIcon = new ImageIcon(imgb.getScaledInstance(imgb.getWidth(), imgb.getHeight(), Image.SCALE_DEFAULT));

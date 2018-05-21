@@ -31,6 +31,13 @@ public interface ITaxiTripsManager
 	public LinkedList<Component<String,InfoVertex,InfoEdge>> calcularComponentesFuertementeConexos() throws Exception;
 	
 	/**
+	 * A  partir  del  grafo  cargado  al  inicio y  de  los  componentes  conectados 
+	 * encontrados  en  el  punto  2, genere  un  mapa  coloreado  de  la  red  vial  
+	 * de  Chicago utilizando Google Maps.
+	 */
+	public void Req3GenerarMapaComponentes() throws Exception;
+	
+	/**
 	 *Encontrar el camino de costo m�nimo (menor distancia)  para un servicio que inicia 
 	 *en un  punto  (latitud,  longitud)  escogido  aleatoriamente  de  la  informaci�n  
 	 *cargada  del archivo  de  calles  (StreetLines.csv)  y  finaliza  en  
@@ -46,5 +53,13 @@ public interface ITaxiTripsManager
 	 * en el grafo y encuentre los caminos de mayor y menor duraci�n entre dichos puntos. 
 	 */
 	public Path[] caminosMayorMenorDuracion();
+	
+	/**
+	 * Dado un servicio que inicia en un punto (latitud, longitud) escogido aleatoriamente 
+	 * de la  informaci�n  cargada  del  archivo  de  calles  (StreetLines.csv)  y  finaliza  
+	 * en  un  punto (latitud, longitud)escogido tambi�n de manera aleatoria del archivo de calles.  
+	 * Indique si  existen  caminos  entre  ambos  puntos,  en  los  que  no  deba  pagar  peaje. 
+	 */
+	public LinkedList<Path> Req6CaminosSinPeaje();
 
 }

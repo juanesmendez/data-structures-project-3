@@ -29,6 +29,9 @@ public class KosarajuSharirSCC<K extends Comparable<K>,V,A> {
 		// TODO Auto-generated method stub
 		marked[v] = true;
 		id[v] = count;
+		//Aqui agrego el numero count como atributo del vertice:
+		graph.getVerticesHashTableByNum().get(v).setComponent(count);
+		
 		for(Edge<A> e: graph.getVertexByNum(v).getEdges()) {
 			Vertex<K,V,A> w = e.getFinalVertex();
 			if(!marked[w.getNum()]) {

@@ -1,5 +1,6 @@
 package model.logic;
 
+import java.awt.Color;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,11 +29,15 @@ import com.sun.javafx.binding.StringFormatter;
 
 import api.ITaxiTripsManager;
 import javafx.util.converter.LocalDateStringConverter;
+import model.algorithms.AllPaths;
 import model.algorithms.DijkstraSP;
+import model.algorithms.FindAllPaths;
+import model.algorithms.FindAllPathsGeneric;
 import model.algorithms.KosarajuSharirSCC;
 import model.data_structures.DiGraph;
 import model.data_structures.Edge;
 import model.data_structures.IDiGraph;
+import model.data_structures.IHashTableLP;
 import model.data_structures.LinkedList;
 import model.data_structures.List;
 import model.data_structures.Vertex;
@@ -42,8 +47,6 @@ import model.vo.InfoEdge;
 import model.vo.InfoVertex;
 import model.vo.Path;
 
-import com.google.*;
-import com.google.maps.model.Bounds;
 public class TaxiTripsManager implements ITaxiTripsManager
 {
 
@@ -61,11 +64,12 @@ public class TaxiTripsManager implements ITaxiTripsManager
 
 
 	public static final String GOOGLE_STATIC_MAPS_API = "https://maps.googleapis.com/maps/api/staticmap?";
-
+	public static final String API_KEY = "AIzaSyDv2q8A1yyFsVxxcPmkWBhebJQrnaANL34";
 
 
 	private IDiGraph<String, InfoVertex, InfoEdge> graph;
 	private LinkedList<Coordinate> coordinatesList;
+	private LinkedList<Component<String,InfoVertex,InfoEdge>> componentsList;
 
 	public TaxiTripsManager() {
 
@@ -266,7 +270,7 @@ public class TaxiTripsManager implements ITaxiTripsManager
 		int[] array = kosarajuSharir.getId();
 
 		for(int i=0;i<array.length;i++) {
-			System.out.println(array[i]);
+			//System.out.println(array[i]);
 			int color = array[i];
 			comp = new Component<String,InfoVertex,InfoEdge>(color);
 			aux = listComponents.get(comp);
@@ -281,11 +285,77 @@ public class TaxiTripsManager implements ITaxiTripsManager
 				aux.addVertex(this.graph.getVertexByNum(i));
 			}
 		}
-		System.out.println("ARRAY SIZE: "+array.length);
+		//System.out.println("ARRAY SIZE: "+array.length);
 
 
+		this.componentsList = listComponents;
 
 		return listComponents;
+	}
+
+	@Override
+	public void Req3GenerarMapaComponentes() throws Exception {
+		// TODO Auto-generated method stub
+		if(this.graph == null) {
+			throw new Exception("Grafo aun no ha sido creado");
+		}
+		if(this.componentsList == null) {
+			throw new Exception("No se han calculado componentes conexos del grafo.");
+		}
+		/*
+		for(Vertex v:this.graph.getListVertices()) {
+			System.out.println("Num: "+ v.getNum() + "  Component: "+v.getComponent());
+		}*/
+		String url = GOOGLE_STATIC_MAPS_API;
+		String size = "size=400x400";
+		String color = "color:";
+		String markersTotal = "";
+		String markers = "markers=size:mid%7C";
+		String key = API_KEY;
+		
+		
+		Random rand = new Random();
+		
+		for(Component c:this.componentsList) {
+			float r = rand.nextFloat();
+			float g = rand.nextFloat();
+			float b = rand.nextFloat();
+			//System.out.println("R: "+r+" G: "+g+" B: "+b);
+			Color randomColor = new Color(r, g, b);
+			/*
+			String hex = String.format("#%02x%02x%02x", r, g, b);  
+			System.out.println(hex);*/
+
+			String hexColour = Integer.toHexString(randomColor.getRGB() & 0xffffff);
+			if (hexColour.length() < 6) {
+				hexColour = "000000".substring(0, 6 - hexColour.length()) + hexColour;
+			}
+			hexColour =  "0x" + hexColour;
+			//System.out.println(hexColour);
+			//-----------------------
+			markers = "markers=size:mid%7C";
+			color = "color:"+hexColour+"%7C";
+			
+			markers = markers+color;
+			IHashTableLP<Integer,Vertex<String,InfoVertex,InfoEdge>> hash = c.getHashTableVertices();
+			for(Integer i:hash.keys()) {
+				Vertex<String,InfoVertex,InfoEdge> v = hash.get(i);
+				markers += v.getValue().getLatitudReferencia() + ","+v.getValue().getLongitudReferencia() + "%7C";
+			}
+			markers = markers.substring(0, markers.length()-3);
+			
+			if(markersTotal.equals("")) {
+				markersTotal += markers;
+			}else {
+				markersTotal += "&" + markers;
+			}
+		}
+		
+		System.out.println(markersTotal);
+		
+		url = url+"&"+size+"&"+markersTotal+"&"+key;
+		System.out.println("Size url: "+url.length());
+		
 	}
 
 	@Override
@@ -327,7 +397,7 @@ public class TaxiTripsManager implements ITaxiTripsManager
 		DijkstraSP<String, InfoVertex, InfoEdge> dijkstra = new DijkstraSP<>(this.graph, initialVertex, "distancia");
 		Iterable<Edge<InfoEdge>> pathIterable = dijkstra.pathTo(finalVertex);
 		path = new Path(pathIterable); //Lo meto en un objeto de tipo Path
-		
+
 
 		return path;
 	}
@@ -354,7 +424,7 @@ public class TaxiTripsManager implements ITaxiTripsManager
 		double distance2;
 		Vertex<String,InfoVertex,InfoEdge> initialVertex=null;
 		Vertex<String,InfoVertex,InfoEdge> finalVertex=null;
-		
+
 		Iterable<Edge<InfoEdge>> aux;
 		DijkstraSP<String, InfoVertex, InfoEdge> dijkstra;
 
@@ -372,20 +442,84 @@ public class TaxiTripsManager implements ITaxiTripsManager
 			}
 
 		}
-		
+
 		dijkstra = new DijkstraSP<>(this.graph, initialVertex, "duracion");
-		
+
 		aux = dijkstra.pathTo(finalVertex);
 		path1 = new Path(aux);
 		paths[0] = path1;
-		
+
 		dijkstra = new DijkstraSP<>(this.graph, finalVertex, "duracion");
 		aux = dijkstra.pathTo(initialVertex);
 		path2 = new Path(aux);
 		paths[1] = path2;
-		
-		
+
+
 		return paths;
+	}
+
+	@Override
+	public LinkedList<Path> Req6CaminosSinPeaje() {
+		// TODO Auto-generated method stub
+
+
+		Random randomGenerator = new Random();
+		int index1 = randomGenerator.nextInt(this.coordinatesList.size());
+		int index2 = randomGenerator.nextInt(this.coordinatesList.size());
+
+		Coordinate initialCoordinate = this.coordinatesList.get(index1);
+		Coordinate finalCoordinate = this.coordinatesList.get(index2);
+
+		//Recorrer vertices y encontrar vertice mas cercano a cada uno
+		double menor1 = Integer.MAX_VALUE;
+		double menor2 = Integer.MAX_VALUE;
+
+		double distance1;
+		double distance2;
+		Vertex<String,InfoVertex,InfoEdge> initialVertex=null;
+		Vertex<String,InfoVertex,InfoEdge> finalVertex=null;
+
+		for(Vertex<String,InfoVertex,InfoEdge> vertex:graph.getListVertices()) {
+
+			distance1 = getHarvesianDistance(vertex.getValue().getLatitudReferencia(), vertex.getValue().getLongitudReferencia(), initialCoordinate.getLatitude(), initialCoordinate.getLongitude());
+			distance2 = getHarvesianDistance(vertex.getValue().getLatitudReferencia(), vertex.getValue().getLongitudReferencia(), finalCoordinate.getLatitude(), finalCoordinate.getLongitude());
+			if(distance1 < menor1) {
+				menor1 = distance1;
+				initialVertex = vertex;
+			}
+			if(distance2 < menor2) {
+				menor2 = distance2;
+				finalVertex = vertex;
+			}
+
+		}
+		System.out.println(initialVertex.getNum());
+		System.out.println(finalVertex.getNum());
+
+		KosarajuSharirSCC<String, InfoVertex, InfoEdge> kos = new KosarajuSharirSCC<>(this.graph);
+		int[] idArray = kos.getId();
+
+
+
+		initialVertex = graph.getVertexByNum(114);
+		finalVertex = graph.getVertexByNum(130);
+
+		FindAllPaths<String, InfoVertex> fal = new FindAllPaths<String,InfoVertex>(this.graph, initialVertex, finalVertex,idArray);
+
+		LinkedList<Path> listaPaths = fal.getPaths();
+
+		//114
+		//130
+
+
+		/*
+		FindAllPathsGeneric<String, InfoVertex, InfoEdge> falg =  new FindAllPathsGeneric<>(this.graph, initialVertex, finalVertex, idArray);
+		LinkedList<Path>listaPaths = null;*/
+		/*
+		AllPaths<String, InfoVertex> allPaths = new AllPaths<>(this.graph, initialVertex, finalVertex);
+
+		LinkedList<Path> listaPaths = allPaths.getPaths();*/
+		return listaPaths;
 	}
 
 	public static double getHarvesianDistance(double lat1, double lon1, double lat2, double lon2)
@@ -399,6 +533,10 @@ public class TaxiTripsManager implements ITaxiTripsManager
 		Double distance = R * c;
 		return distance;
 	}
+
+
+
+
 
 
 

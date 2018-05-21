@@ -29,12 +29,20 @@ public class Controller
 		return manager.calcularComponentesFuertementeConexos();
 	}
 	
+	public static void Req3GenerarMapaComponentes() throws Exception {
+		manager.Req3GenerarMapaComponentes();
+	}
+	
 	public static Path encontrarCaminoMenorDistancia(){
 		return manager.encontrarCaminoMenorDistancia();
 	}
 	
 	public static Path[] caminosMayorMenorDuracion(){
 		return manager.caminosMayorMenorDuracion();
+	}
+	
+	public static LinkedList<Path> Req6CaminosSinPeaje(){
+		return manager.Req6CaminosSinPeaje();
 	}
 	
 }

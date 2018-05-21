@@ -18,6 +18,14 @@ public class List<T extends Comparable<T>> implements LinkedList<T> ,Iterable<T>
 		//Iterator initialization missing
 	}
 	
+	public List(LinkedList<T> list) {
+		this.head = null;
+		this.size = 0;
+		for(T element: list) {
+			this.add(element);
+		}
+	}
+	
 	public class Node<T extends Comparable<T>> {
 		T item;
 		Node next;
@@ -71,11 +79,25 @@ public class List<T extends Comparable<T>> implements LinkedList<T> ,Iterable<T>
 		if(this.head!=null) {
 			Node<T> aux = this.head;
 			if(aux.getItem() == item) {
+				if(aux.getNext() == null) {
+					this.head = null;
+					this.last = null;
+				}else if(aux.getNext().getNext() == null) {
+					this.head = aux.getNext();
+					this.last = head;
+				}else {
+					this.head = aux.getNext();
+				}
+				
+				//---------
+				/*
 				this.head = aux.getNext();
 				aux = null;
 				if(this.head.getNext() == null) {
 					this.last = this.head;
 				}
+				this.size--;*/
+				//----------
 				this.size--;
 			}else {
 				while(aux.getNext()!=null) {
