@@ -7,12 +7,14 @@ public class Path implements Comparable<Path>{
 	private int segundos;
 	private float distancia;
 	private float valor;
+	private boolean peaje;
 	
 	public Path(Iterable<Edge<InfoEdge>> edges) {
 		this.edges = (Stack<Edge<InfoEdge>>) edges;
 		this.segundos = 0;
 		this.distancia = 0;
 		this.valor = 0;
+		this.peaje = false;
 		this.calculate();
 	}
 	
@@ -21,6 +23,7 @@ public class Path implements Comparable<Path>{
 		this.segundos = 0;
 		this.distancia = 0;
 		this.valor = 0;
+		this.peaje=false;
 		this.calculateInfo();
 	}
 	
@@ -30,6 +33,10 @@ public class Path implements Comparable<Path>{
 			segundos += e.getWeight().getSegundos();
 			distancia += e.getWeight().getDistancia();
 			valor += e.getWeight().getValor();
+			if(e.getPeaje().getContPeaje()!=0)
+			{
+				peaje = true;
+			}
 		}
 	}
 
@@ -38,6 +45,10 @@ public class Path implements Comparable<Path>{
 		this.segundos += e.getWeight().getSegundos();
 		this.distancia += e.getWeight().getDistancia();
 		this.valor += e.getWeight().getValor();
+		if(e.getPeaje().getContPeaje()!=0)
+		{
+			this.peaje = true;
+		}
 	}
 	
 	private void calculate() {
@@ -46,6 +57,10 @@ public class Path implements Comparable<Path>{
 			segundos += e.getWeight().getSegundos();
 			distancia += e.getWeight().getDistancia();
 			valor += e.getWeight().getValor();
+			if (e.getPeaje().getContPeaje()!=0)
+			{
+				this.peaje=true;
+			}
 		}
 	}
 
@@ -79,6 +94,16 @@ public class Path implements Comparable<Path>{
 
 	public void setValor(float valor) {
 		this.valor = valor;
+	}
+	
+	public boolean getPeaje()
+	{
+		return peaje;
+	}
+	
+	public void setPeaje(boolean peaje)
+	{
+		this.peaje = peaje;
 	}
 
 	public LinkedList<Edge<InfoEdge>> getEdgesList() {

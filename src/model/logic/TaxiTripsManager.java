@@ -462,7 +462,8 @@ public class TaxiTripsManager implements ITaxiTripsManager
 	public LinkedList<Path> Req6CaminosSinPeaje() {
 		// TODO Auto-generated method stub
 
-
+		LinkedList<Path> respuesta = new List<>();
+		
 		Random randomGenerator = new Random();
 		int index1 = randomGenerator.nextInt(this.coordinatesList.size());
 		int index2 = randomGenerator.nextInt(this.coordinatesList.size());
@@ -507,6 +508,14 @@ public class TaxiTripsManager implements ITaxiTripsManager
 		FindAllPaths<String, InfoVertex> fal = new FindAllPaths<String,InfoVertex>(this.graph, initialVertex, finalVertex,idArray);
 
 		LinkedList<Path> listaPaths = fal.getPaths();
+		
+		for (Path p:listaPaths)
+		{
+			if(p.getPeaje()==true)
+			{
+				respuesta.add(p);
+			}
+		}
 
 		//114
 		//130
@@ -519,7 +528,7 @@ public class TaxiTripsManager implements ITaxiTripsManager
 		AllPaths<String, InfoVertex> allPaths = new AllPaths<>(this.graph, initialVertex, finalVertex);
 
 		LinkedList<Path> listaPaths = allPaths.getPaths();*/
-		return listaPaths;
+		return respuesta;
 	}
 
 	public static double getHarvesianDistance(double lat1, double lon1, double lat2, double lon2)

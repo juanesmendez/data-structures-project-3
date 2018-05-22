@@ -7,6 +7,7 @@ public class Edge<A> implements Comparable <Edge<A>>{ //Cambiar a private cuando
 	boolean marked;
 	Vertex initialVertex;
 	Vertex finalVertex;
+	A peaje;
 
 	public Edge(A weight, Vertex initialVertex, Vertex finalVertex) {
 		this.weight = weight;
@@ -30,6 +31,11 @@ public class Edge<A> implements Comparable <Edge<A>>{ //Cambiar a private cuando
 
 	public void setWeight(A weight) {
 		this.weight = weight;
+	}
+	
+	public A getPeaje()
+	{
+		return peaje;
 	}
 
 	@Override
