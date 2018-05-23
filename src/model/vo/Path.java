@@ -33,10 +33,7 @@ public class Path implements Comparable<Path>{
 			segundos += e.getWeight().getSegundos();
 			distancia += e.getWeight().getDistancia();
 			valor += e.getWeight().getValor();
-			if(e.getPeaje().getContPeaje()!=0)
-			{
-				peaje = true;
-			}
+			
 		}
 	}
 
@@ -45,10 +42,7 @@ public class Path implements Comparable<Path>{
 		this.segundos += e.getWeight().getSegundos();
 		this.distancia += e.getWeight().getDistancia();
 		this.valor += e.getWeight().getValor();
-		if(e.getPeaje().getContPeaje()!=0)
-		{
-			this.peaje = true;
-		}
+		
 	}
 	
 	private void calculate() {
@@ -57,10 +51,7 @@ public class Path implements Comparable<Path>{
 			segundos += e.getWeight().getSegundos();
 			distancia += e.getWeight().getDistancia();
 			valor += e.getWeight().getValor();
-			if (e.getPeaje().getContPeaje()!=0)
-			{
-				this.peaje=true;
-			}
+			
 		}
 	}
 
