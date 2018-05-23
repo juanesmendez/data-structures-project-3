@@ -374,8 +374,11 @@ public class TaxiTripsManager implements ITaxiTripsManager
 	}
 
 	@Override
-	public Path encontrarCaminoMenorDistancia() {
+	public Path encontrarCaminoMenorDistancia() throws Exception {
 		// TODO Auto-generated method stub
+		if(this.graph == null) {
+			throw new Exception("Grafo aun no ha sido creado");
+		}
 		Path path;
 		Random randomGenerator = new Random();
 		int index1 = randomGenerator.nextInt(this.coordinatesList.size());
@@ -418,8 +421,11 @@ public class TaxiTripsManager implements ITaxiTripsManager
 	}
 
 	@Override
-	public Path[] caminosMayorMenorDuracion() {
+	public Path[] caminosMayorMenorDuracion() throws Exception {
 		// TODO Auto-generated method stub
+		if(this.graph == null) {
+			throw new Exception("Grafo aun no ha sido creado");
+		}
 		Path[] paths = new Path[2];
 		Path path1;
 		Path path2;
@@ -474,9 +480,11 @@ public class TaxiTripsManager implements ITaxiTripsManager
 	}
 
 	@Override
-	public LinkedList<Path> Req6CaminosSinPeaje() {
+	public LinkedList<Path> Req6CaminosSinPeaje() throws Exception {
 		// TODO Auto-generated method stub
-
+		if(this.graph == null) {
+			throw new Exception("Grafo aun no ha sido creado");
+		}
 		Random randomGenerator = new Random();
 		int index1 = randomGenerator.nextInt(this.coordinatesList.size());
 		int index2 = randomGenerator.nextInt(this.coordinatesList.size());
@@ -510,29 +518,13 @@ public class TaxiTripsManager implements ITaxiTripsManager
 		System.out.println(initialVertex.getNum());
 		System.out.println(finalVertex.getNum());
 
-		KosarajuSharirSCC<String, InfoVertex, InfoEdge> kos = new KosarajuSharirSCC<>(this.graph);
-		int[] idArray = kos.getId();
-
-
-
 		//initialVertex = graph.getVertexByNum(114);
 		//finalVertex = graph.getVertexByNum(130);
 
-		FindAllPaths<String, InfoVertex> fal = new FindAllPaths<String,InfoVertex>(this.graph, initialVertex, finalVertex,idArray);
+		FindAllPaths<String, InfoVertex> fal = new FindAllPaths<String,InfoVertex>(this.graph, initialVertex, finalVertex);
 
 		LinkedList<Path> listaPaths = fal.getPaths();		
 
-		//114
-		//130
-
-
-		/*
-		FindAllPathsGeneric<String, InfoVertex, InfoEdge> falg =  new FindAllPathsGeneric<>(this.graph, initialVertex, finalVertex, idArray);
-		LinkedList<Path>listaPaths = null;*/
-		/*
-		AllPaths<String, InfoVertex> allPaths = new AllPaths<>(this.graph, initialVertex, finalVertex);
-
-		LinkedList<Path> listaPaths = allPaths.getPaths();*/
 		return listaPaths;
 	}
 

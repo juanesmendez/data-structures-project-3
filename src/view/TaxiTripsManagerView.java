@@ -110,7 +110,7 @@ public class TaxiTripsManagerView
 					//String url = "https://maps.googleapis.com/maps/api/staticmap?center=Berkeley,CA&zoom=14&size=400x400&key=AIzaSyDv2q8A1yyFsVxxcPmkWBhebJQrnaANL34";
 
 					launchMap(url);
-	*/
+					 */
 					MapManager.dibujoRequerimiento1(vertex.getValue().getLatitudReferencia(), vertex.getValue().getLongitudReferencia());
 
 				}catch(Exception e) {
@@ -136,19 +136,18 @@ public class TaxiTripsManagerView
 							componenteMasGrande = c;
 						}
 						System.out.println(c.toString());
-						System.out.println();
+						System.out.println("---------------------------------");
 					}
-
-					System.out.println("NUMERO TOTAL DE COMPONENTES "+componentes.size());
-					System.out.println();
+					System.out.println("NUMERO TOTAL DE COMPONENTES: "+componentes.size());
+					System.out.println("---------------------------------");
 					System.out.println("COMPONENTE MAS GRANDE: ");
 					System.out.println(componenteMasGrande.toString());
 					System.out.println();
-					
+
 					MapManager.dibujoRequerimiento2(componenteMasGrande);
-					
+
 					//------------
-					
+
 					/*
 					url = GOOGLE_STATIC_MAPS_API;
 					center = "center="+41.881832+","+-87.623177;
@@ -168,23 +167,23 @@ public class TaxiTripsManagerView
 					}
 					markers = markers.substring(0, markers.length()-3);
 					//System.out.println("markers value: "+markers);
-					
+
 					for(Integer inte:componenteMasGrande.getHashTableVertices().keys()) {
 						Vertex<String,InfoVertex,InfoEdge> vert = componenteMasGrande.getHashTableVertices().get(inte);
 						for(Edge<InfoEdge> e: vert.getEdges()) {
 							Vertex<String,InfoVertex,InfoEdge> finalVer = e.getFinalVertex();
-							
+
 							pathComponents += "path=color:0x0000ff%7Cweight:5%7C" + vert.getValue().getLatitudReferencia() + ","+vert.getValue().getLongitudReferencia() + "%7C" + finalVer.getValue().getLatitudReferencia() + "," + finalVer.getValue().getLongitudReferencia()+"&";
 						}
 					}
-					
+
 					pathComponents = pathComponents.substring(0, pathComponents.length()-1);
 					//System.out.println("Path components: "+pathComponents);
 					//url = url+center+"&"+zoom+"&"+size+"&"+markers+"&"+key;
 					url = url+size+"&"+scale2+"&"+markers+"&"+key; //Agregar pathcomponents
 					//System.out.println("Tamaño url: "+url.length());
 					launchMap(url);
-					*/
+					 */
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -193,19 +192,19 @@ public class TaxiTripsManagerView
 				break;
 
 			case 3:
-					
+
 				try {
 					Iterable<Vertex<String,InfoVertex,InfoEdge>> vertices = Controller.Req3GenerarMapaComponentes();
-					
+
 					//MapManager.dibujoRequerimiento3(vertices);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
+
 				/*
 			       File file2 = new File("mapR2.html");
-			       
+
 			       try {
 			    	   final Browser browser = new Browser();
 					browser.loadURL(file2.toURI().toURL().toString());
@@ -221,252 +220,255 @@ public class TaxiTripsManagerView
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				*/
-				
+				 */
+
 				break;
 			case 4:
-				Path path = Controller.encontrarCaminoMenorDistancia();
-				System.out.println();
-				url = GOOGLE_STATIC_MAPS_API;
-				//center = "center="+vertex.getValue().getLatitudReferencia()+","+vertex.getValue().getLongitudReferencia();
-				zoom = "zoom=12";
-				size = "size=600x600";
-				scale = "scale=1";
-				markers = "markers=size:mid%7Ccolor:green%7C";
-				key = "key="+API_KEY;
-				String pathString = "path=color:0x0000ff%7Cweight:5%7C";
-				Iterator it = path.getEdges().iterator();
-				Vertex<String,InfoVertex,InfoEdge> verticeInicial = null;
-				Vertex<String,InfoVertex,InfoEdge> verticeFinal = null;
-				if(it.hasNext()) {
-					int k=0;
-					for(Edge<InfoEdge> e:path.getEdges()) {
-						System.out.println(e.getInitialVertex().getNum() + " -> "+ e.getFinalVertex().getNum()+"    "+e.getWeight().getDistancia());
+				Path path;
+				try {
+					path = Controller.encontrarCaminoMenorDistancia();
 
-						if(k==0) {
-							verticeInicial = e.getInitialVertex();
-							Vertex<String,InfoVertex,InfoEdge> initialV = e.getInitialVertex();
+					System.out.println();
+					url = GOOGLE_STATIC_MAPS_API;
+					//center = "center="+vertex.getValue().getLatitudReferencia()+","+vertex.getValue().getLongitudReferencia();
+					zoom = "zoom=12";
+					size = "size=600x600";
+					scale = "scale=1";
+					markers = "markers=size:mid%7Ccolor:green%7C";
+					key = "key="+API_KEY;
+					String pathString = "path=color:0x0000ff%7Cweight:5%7C";
+					Iterator it = path.getEdges().iterator();
+					Vertex<String,InfoVertex,InfoEdge> verticeInicial = null;
+					Vertex<String,InfoVertex,InfoEdge> verticeFinal = null;
+					if(it.hasNext()) {
+						int k=0;
+						for(Edge<InfoEdge> e:path.getEdges()) {
+							System.out.println(e.getInitialVertex().getNum() + " -> "+ e.getFinalVertex().getNum()+"    "+e.getWeight().getDistancia());
+
+							if(k==0) {
+								verticeInicial = e.getInitialVertex();
+								Vertex<String,InfoVertex,InfoEdge> initialV = e.getInitialVertex();
+								Vertex<String,InfoVertex,InfoEdge> finalV = e.getFinalVertex();
+
+								pathString = pathString+initialV.getValue().getLatitudReferencia()+","+initialV.getValue().getLongitudReferencia()+"%7C"+finalV.getValue().getLatitudReferencia()+","+finalV.getValue().getLongitudReferencia()+"%7C";
+								k++;
+								continue;
+							}
+
 							Vertex<String,InfoVertex,InfoEdge> finalV = e.getFinalVertex();
 
-							pathString = pathString+initialV.getValue().getLatitudReferencia()+","+initialV.getValue().getLongitudReferencia()+"%7C"+finalV.getValue().getLatitudReferencia()+","+finalV.getValue().getLongitudReferencia()+"%7C";
+							pathString = pathString+finalV.getValue().getLatitudReferencia()+","+finalV.getValue().getLongitudReferencia()+"%7C";
 							k++;
-							continue;
 						}
 
-						Vertex<String,InfoVertex,InfoEdge> finalV = e.getFinalVertex();
+						Iterator it2 = path.getEdges().iterator();
+						while(it2.hasNext()) {
+							Edge<InfoEdge> edge = (Edge<InfoEdge>) it2.next();
+							if(it2.hasNext() == false) {
+								verticeFinal=edge.getFinalVertex();
+							}
 
-						pathString = pathString+finalV.getValue().getLatitudReferencia()+","+finalV.getValue().getLongitudReferencia()+"%7C";
-						k++;
-					}
-
-					Iterator it2 = path.getEdges().iterator();
-					while(it2.hasNext()) {
-						Edge<InfoEdge> edge = (Edge<InfoEdge>) it2.next();
-						if(it2.hasNext() == false) {
-							verticeFinal=edge.getFinalVertex();
 						}
+						System.out.println("-----------------------------------");
+						System.out.println("VERTICE INICIAL:");
+						System.out.println("Num: "+verticeInicial.getNum());
+						System.out.println("Latitud: "+verticeInicial.getValue().getLatitudReferencia());
+						System.out.println("Longitud: "+verticeInicial.getValue().getLongitudReferencia());
+						System.out.println("-----------------------------------");
+						System.out.println("FINAL VERTEX:");
+						System.out.println("Num: "+verticeFinal.getNum());
+						System.out.println("Latitud: "+verticeFinal.getValue().getLatitudReferencia());
+						System.out.println("Longitud: "+verticeFinal.getValue().getLongitudReferencia());
 
+						pathString = pathString.substring(0, pathString.length()-3);
+						markers = markers+verticeInicial.getValue().getLatitudReferencia()+","+verticeInicial.getValue().getLongitudReferencia();
+						markers = markers+"&"+"markers=size:mid%7Ccolor:red%7C"+verticeFinal.getValue().getLatitudReferencia()+","+verticeFinal.getValue().getLongitudReferencia();
+						url = url+"&"+size+"&"+scale+"&"+markers+"&"+pathString+"&"+key;
+						System.out.println("-----------------------------------");
+						System.out.println("Tiempo estimado: "+path.getSegundos()+" segundos");
+						System.out.println("Distancia Estimada: "+path.getDistancia()+" millas");
+						System.out.println("Valor estimado: $"+path.getValor());
+						System.out.println("-----------------------------------");
+
+						launchMap(url);
+					}else {
+						System.out.println("No se puede generar camino en el mapa por que no existe conexion entre los vertices aleatorios.");
 					}
-					System.out.println();
-					System.out.println("VERTICE INICIAL:");
-					System.out.println("Num: "+verticeInicial.getNum());
-					System.out.println("Latitud: "+verticeInicial.getValue().getLatitudReferencia());
-					System.out.println("Longitud: "+verticeInicial.getValue().getLongitudReferencia());
-					System.out.println();
-					System.out.println("FINAL VERTEX:");
-					System.out.println("Num: "+verticeFinal.getNum());
-					System.out.println("Latitud: "+verticeFinal.getValue().getLatitudReferencia());
-					System.out.println("Longitud: "+verticeFinal.getValue().getLongitudReferencia());
-					System.out.println();
 
-					pathString = pathString.substring(0, pathString.length()-3);
-					markers = markers+verticeInicial.getValue().getLatitudReferencia()+","+verticeInicial.getValue().getLongitudReferencia();
-					markers = markers+"&"+"markers=size:mid%7Ccolor:red%7C"+verticeFinal.getValue().getLatitudReferencia()+","+verticeFinal.getValue().getLongitudReferencia();
-					url = url+"&"+size+"&"+scale+"&"+markers+"&"+pathString+"&"+key;
-					System.out.println();
-					System.out.println("Tiempo estimado: "+path.getSegundos()+" segundos");
-					System.out.println("Distancia Estimada: "+path.getDistancia()+" millas");
-					System.out.println("Valor estimado: $"+path.getValor());
-
-					launchMap(url);
-				}else {
-					System.out.println("No se puede generar camino en el mapa por que no existe conexion entre los vertices aleatorios.");
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 
 				break;
 
 			case 5:
-				
-				Path[] arrayPaths = Controller.caminosMayorMenorDuracion();
-				Path path1 = arrayPaths[0];
-				Path path2 = arrayPaths[1];
-				Vertex<String,InfoVertex,InfoEdge> vi = null;
-				Vertex<String,InfoVertex,InfoEdge> vf = null;
-				Vertex<String,InfoVertex,InfoEdge> iniV = null;
-				Vertex<String,InfoVertex,InfoEdge> finV = null;
-				int i=0;
-				
-				url = GOOGLE_STATIC_MAPS_API;
-				//center = "center="+vertex.getValue().getLatitudReferencia()+","+vertex.getValue().getLongitudReferencia();
-				zoom = "zoom=12";
-				size = "size=600x600";
-				scale = "scale=1";
-				String markers1 = "";
-				String markers2 = "";
-				key = "key="+API_KEY;
-				
-				String pathString1 = "";
-				String pathString2 = "";
-				
-				Iterator iterator1 = path1.getEdges().iterator();
-				System.out.println();
-				System.out.println("CAMINO 1: ");
-				if(iterator1.hasNext()) {
-					pathString1 = "path=color:0x0000ff%7Cweight:5%7C";
-					markers1 = "markers=size:mid%7Ccolor:green%7C";
-					
-					for(Edge<InfoEdge> e: path1.getEdges()) {
-						System.out.println(e.getInitialVertex().getNum()+" -> "+e.getFinalVertex().getNum());
-						
-						if(i==0) {
-							vi = e.getInitialVertex();
-							iniV = e.getInitialVertex();
+				try {
+					Path[] arrayPaths = Controller.caminosMayorMenorDuracion();
+					Path path1 = arrayPaths[0];
+					Path path2 = arrayPaths[1];
+					Vertex<String,InfoVertex,InfoEdge> vi = null;
+					Vertex<String,InfoVertex,InfoEdge> vf = null;
+					Vertex<String,InfoVertex,InfoEdge> iniV = null;
+					Vertex<String,InfoVertex,InfoEdge> finV = null;
+					int i=0;
+
+					url = GOOGLE_STATIC_MAPS_API;
+					//center = "center="+vertex.getValue().getLatitudReferencia()+","+vertex.getValue().getLongitudReferencia();
+					zoom = "zoom=12";
+					size = "size=600x600";
+					scale = "scale=1";
+					String markers1 = "";
+					String markers2 = "";
+					key = "key="+API_KEY;
+
+					String pathString1 = "";
+					String pathString2 = "";
+
+					Iterator iterator1 = path1.getEdges().iterator();
+					System.out.println();
+					System.out.println("CAMINO 1: ");
+					if(iterator1.hasNext()) {
+						pathString1 = "path=color:0x0000ff%7Cweight:5%7C";
+						markers1 = "markers=size:mid%7Ccolor:green%7C";
+
+						for(Edge<InfoEdge> e: path1.getEdges()) {
+							System.out.println(e.getInitialVertex().getNum()+" -> "+e.getFinalVertex().getNum());
+
+							if(i==0) {
+								vi = e.getInitialVertex();
+								iniV = e.getInitialVertex();
+								finV = e.getFinalVertex();
+
+								pathString1 = pathString1+iniV.getValue().getLatitudReferencia()+","+iniV.getValue().getLongitudReferencia()+"%7C"+finV.getValue().getLatitudReferencia()+","+finV.getValue().getLongitudReferencia()+"%7C";
+
+
+								i++;
+								continue;
+							}
+
 							finV = e.getFinalVertex();
-							
-							pathString1 = pathString1+iniV.getValue().getLatitudReferencia()+","+iniV.getValue().getLongitudReferencia()+"%7C"+finV.getValue().getLatitudReferencia()+","+finV.getValue().getLongitudReferencia()+"%7C";
 
-							
+							pathString1 = pathString1+finV.getValue().getLatitudReferencia()+","+finV.getValue().getLongitudReferencia()+"%7C";
 							i++;
-							continue;
 						}
-						
-						finV = e.getFinalVertex();
 
-						pathString1 = pathString1+finV.getValue().getLatitudReferencia()+","+finV.getValue().getLongitudReferencia()+"%7C";
-						i++;
-					}
-					
-					pathString1 = pathString1.substring(0, pathString1.length()-3);
-					Iterator iterator2 = path1.getEdges().iterator();
-					while(iterator2.hasNext()) {
-						Edge<InfoEdge> edge = (Edge<InfoEdge>) iterator2.next();
-						if(iterator2.hasNext() == false) {
-							vf=edge.getFinalVertex();
+						pathString1 = pathString1.substring(0, pathString1.length()-3);
+						Iterator iterator2 = path1.getEdges().iterator();
+						while(iterator2.hasNext()) {
+							Edge<InfoEdge> edge = (Edge<InfoEdge>) iterator2.next();
+							if(iterator2.hasNext() == false) {
+								vf=edge.getFinalVertex();
+							}
 						}
+						System.out.println("------------------------------------");
+						System.out.println("VERTICE INICIAL:");
+						System.out.println("\tNum: "+vi.getNum());
+						System.out.println("\tLatitud: "+vi.getValue().getLatitudReferencia());
+						System.out.println("\tLongitud: "+vi.getValue().getLongitudReferencia());
+						System.out.println("------------------------------------");
+						System.out.println("FINAL VERTEX:");
+						System.out.println("\tNum: "+vf.getNum());
+						System.out.println("\tLatitud: "+vf.getValue().getLatitudReferencia());
+						System.out.println("\tLongitud: "+vf.getValue().getLongitudReferencia());
+
+						markers1 = markers1+vi.getValue().getLatitudReferencia()+","+vi.getValue().getLongitudReferencia();
+						markers1 = markers1+"&"+"markers=size:mid%7Ccolor:red%7C"+vf.getValue().getLatitudReferencia()+","+vf.getValue().getLongitudReferencia();
+
+						System.out.println("------------------------------------");
+						System.out.println("Tiempo estimado: "+path1.getSegundos()+" segundos");
+						System.out.println("Distancia Estimada: "+path1.getDistancia()+" millas");
+						System.out.println("Valor estimado: $"+path1.getValor());
+						System.out.println("------------------------------------");
+					}else {
+						System.out.println("------------------------------------");
+						System.out.println("No existe un camino del vertice inicial al vertice final.");
 					}
+
+					Iterator iterator3 = path2.getEdges().iterator();
 					System.out.println();
-					System.out.println("VERTICE INICIAL:");
-					System.out.println("\tNum: "+vi.getNum());
-					System.out.println("\tLatitud: "+vi.getValue().getLatitudReferencia());
-					System.out.println("\tLongitud: "+vi.getValue().getLongitudReferencia());
-					System.out.println();
-					System.out.println("FINAL VERTEX:");
-					System.out.println("\tNum: "+vf.getNum());
-					System.out.println("\tLatitud: "+vf.getValue().getLatitudReferencia());
-					System.out.println("\tLongitud: "+vf.getValue().getLongitudReferencia());
-					System.out.println();
-					
-					
-					markers1 = markers1+vi.getValue().getLatitudReferencia()+","+vi.getValue().getLongitudReferencia();
-					markers1 = markers1+"&"+"markers=size:mid%7Ccolor:red%7C"+vf.getValue().getLatitudReferencia()+","+vf.getValue().getLongitudReferencia();
-					
-					System.out.println();
-					System.out.println("Tiempo estimado: "+path1.getSegundos()+" segundos");
-					System.out.println("Distancia Estimada: "+path1.getDistancia()+" millas");
-					System.out.println("Valor estimado: $"+path1.getValor());
-					System.out.println();
-				}else {
-					System.out.println("No existe un camino del vertice inicial al vertice final.");
-				}
-				
-				Iterator iterator3 = path2.getEdges().iterator();
-				System.out.println();
-				if(iterator3.hasNext()) {
-					
-					pathString2 = "path=color:red%7Cweight:5%7C";
-					markers2 = "markers=size:mid%7Ccolor:blue%7C";
-					i=0;
-					System.out.println("CAMINO 2");
-					for(Edge<InfoEdge> e:path2.getEdges()) {
-						System.out.println(e.getInitialVertex().getNum()+" -> "+e.getFinalVertex().getNum());
-						if(i==0) {
-							vi = e.getInitialVertex();
-							iniV = e.getInitialVertex();
+					if(iterator3.hasNext()) {
+
+						pathString2 = "path=color:red%7Cweight:5%7C";
+						markers2 = "markers=size:mid%7Ccolor:blue%7C";
+						i=0;
+						System.out.println("CAMINO 2");
+						for(Edge<InfoEdge> e:path2.getEdges()) {
+							System.out.println(e.getInitialVertex().getNum()+" -> "+e.getFinalVertex().getNum());
+							if(i==0) {
+								vi = e.getInitialVertex();
+								iniV = e.getInitialVertex();
+								finV = e.getFinalVertex();
+
+								pathString2 = pathString2+iniV.getValue().getLatitudReferencia()+","+iniV.getValue().getLongitudReferencia()+"%7C"+finV.getValue().getLatitudReferencia()+","+finV.getValue().getLongitudReferencia()+"%7C";
+
+
+								i++;
+								continue;
+							}
+
 							finV = e.getFinalVertex();
-							
-							pathString2 = pathString2+iniV.getValue().getLatitudReferencia()+","+iniV.getValue().getLongitudReferencia()+"%7C"+finV.getValue().getLatitudReferencia()+","+finV.getValue().getLongitudReferencia()+"%7C";
 
-							
+							pathString2 = pathString2+finV.getValue().getLatitudReferencia()+","+finV.getValue().getLongitudReferencia()+"%7C";
 							i++;
-							continue;
 						}
-						
-						finV = e.getFinalVertex();
+						pathString2 = pathString2.substring(0, pathString2.length()-3);
 
-						pathString2 = pathString2+finV.getValue().getLatitudReferencia()+","+finV.getValue().getLongitudReferencia()+"%7C";
-						i++;
-					}
-					pathString2 = pathString2.substring(0, pathString2.length()-3);
-					
-					Iterator iterator4 = path2.getEdges().iterator();
-					while(iterator4.hasNext()) {
-						Edge<InfoEdge> edge = (Edge<InfoEdge>) iterator4.next();
-						if(iterator4.hasNext() == false) {
-							vf=edge.getFinalVertex();
+						Iterator iterator4 = path2.getEdges().iterator();
+						while(iterator4.hasNext()) {
+							Edge<InfoEdge> edge = (Edge<InfoEdge>) iterator4.next();
+							if(iterator4.hasNext() == false) {
+								vf=edge.getFinalVertex();
+							}
 						}
+						System.out.println("------------------------------------");
+						System.out.println("VERTICE INICIAL:");
+						System.out.println("\tNum: "+vi.getNum());
+						System.out.println("\tLatitud: "+vi.getValue().getLatitudReferencia());
+						System.out.println("\tLongitud: "+vi.getValue().getLongitudReferencia());
+						System.out.println("------------------------------------");
+						System.out.println("FINAL VERTEX:");
+						System.out.println("\tNum: "+vf.getNum());
+						System.out.println("\tLatitud: "+vf.getValue().getLatitudReferencia());
+						System.out.println("\tLongitud: "+vf.getValue().getLongitudReferencia());
+						System.out.println("------------------------------------");
+
+						markers2 = markers2 +vi.getValue().getLatitudReferencia()+","+vi.getValue().getLongitudReferencia();
+						markers2 = markers2 +"&"+"markers=size:mid%7Ccolor:yellow%7C"+vf.getValue().getLatitudReferencia()+","+vf.getValue().getLongitudReferencia();
+
+						System.out.println("Tiempo estimado: "+path2.getSegundos()+" segundos");
+						System.out.println("Distancia Estimada: "+path2.getDistancia()+" millas");
+						System.out.println("Valor estimado: $"+path2.getValor());
+						System.out.println("------------------------------------");
+					}else {
+						System.out.println("------------------------------------");
+						System.out.println("No existe un camino del vertice final al vertice inicial.");
 					}
-					System.out.println();
-					System.out.println("VERTICE INICIAL:");
-					System.out.println("\tNum: "+vi.getNum());
-					System.out.println("\tLatitud: "+vi.getValue().getLatitudReferencia());
-					System.out.println("\tLongitud: "+vi.getValue().getLongitudReferencia());
-					System.out.println();
-					System.out.println("FINAL VERTEX:");
-					System.out.println("\tNum: "+vf.getNum());
-					System.out.println("\tLatitud: "+vf.getValue().getLatitudReferencia());
-					System.out.println("\tLongitud: "+vf.getValue().getLongitudReferencia());
-					System.out.println();
-					
-					markers2 = markers2 +vi.getValue().getLatitudReferencia()+","+vi.getValue().getLongitudReferencia();
-					markers2 = markers2 +"&"+"markers=size:mid%7Ccolor:yellow%7C"+vf.getValue().getLatitudReferencia()+","+vf.getValue().getLongitudReferencia();
-					System.out.println();
-					System.out.println("Tiempo estimado: "+path2.getSegundos()+" segundos");
-					System.out.println("Distancia Estimada: "+path2.getDistancia()+" millas");
-					System.out.println("Valor estimado: $"+path2.getValor());
-				}else {
-					System.out.println("No existe un camino del vertice final al vertice inicial.");
+
+					if(iterator1.hasNext() && iterator3.hasNext()) {
+						url = url + size +"&"+ scale +"&"+ markers1 +"&"+ markers2 + "&"+pathString1 +"&" +pathString2 + "&"+key;
+						launchMap(url);
+					}else if(iterator1.hasNext() && !iterator3.hasNext()) {
+						url = url + size +"&"+ scale +"&"+ markers1 +"&"+pathString1 +"&"+key;
+						launchMap(url);
+					}else if(!iterator1.hasNext() && iterator3.hasNext()) {
+						url = url + size +"&"+ scale +"&"+ markers2 +"&"+pathString2 +"&"+key;
+						launchMap(url);
+					}
+
+				}catch(Exception e) {
+					e.printStackTrace();
 				}
-				
-				if(iterator1.hasNext() && iterator3.hasNext()) {
-					url = url + size +"&"+ scale +"&"+ markers1 +"&"+ markers2 + "&"+pathString1 +"&" +pathString2 + "&"+key;
-					launchMap(url);
-				}else if(iterator1.hasNext() && !iterator3.hasNext()) {
-					url = url + size +"&"+ scale +"&"+ markers1 +"&"+pathString1 +"&"+key;
-					launchMap(url);
-				}else if(!iterator1.hasNext() && iterator3.hasNext()) {
-					url = url + size +"&"+ scale +"&"+ markers2 +"&"+pathString2 +"&"+key;
-					launchMap(url);
-				}
-				
 				break;
 
 			case 6:
-				
-				LinkedList<Path> paths = Controller.Req6CaminosSinPeaje();
-				
-				
-				/*
-				System.out.println("Size list: "+paths.size());
-				for(Path p: paths) {
-					for(Edge<InfoEdge> e : p.getEdgesList()) {
-						Vertex<String,InfoVertex,InfoEdge> v1 = e.getInitialVertex();
-						Vertex<String,InfoVertex,InfoEdge> v2 = e.getFinalVertex();
-						System.out.println(v1.getNum() + "->" + v2.getNum());
-					}
-					System.out.println();
-				}*/
-				
-				
+
+				try {
+					LinkedList<Path> paths = Controller.Req6CaminosSinPeaje();
+				}catch(Exception e) {
+					e.printStackTrace();
+				}
+
 				break;
 
 			case 7:
@@ -503,7 +505,7 @@ public class TaxiTripsManagerView
 			System.out.println("\nSending GET request to URL: "+url);
 			System.out.println("Response code: "+responseCode);
 			System.out.println("Content Type: "+con.getContentType());
-			
+
 			//URLImageSource img = (URLImageSource) con.getContent();
 			BufferedImage imgb = ImageIO.read(con.getInputStream());
 			ImageIcon iIcon = new ImageIcon(imgb.getScaledInstance(imgb.getWidth(), imgb.getHeight(), Image.SCALE_DEFAULT));

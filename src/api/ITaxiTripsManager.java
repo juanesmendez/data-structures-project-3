@@ -39,7 +39,7 @@ public interface ITaxiTripsManager
 	 *cargada  del archivo  de  calles  (StreetLines.csv)  y  finaliza  en  
 	 *un  punto  (latitud,  longitud)  escogido tambi�n de manera aleatoria del archivo de calles.  
 	 */
-	public Path encontrarCaminoMenorDistancia();
+	public Path encontrarCaminoMenorDistancia() throws Exception;
 	
 	/**
 	 * Dado un servicio que inicia en un punto (latitud, longitud) escogido aleatoriamente de la 
@@ -48,7 +48,7 @@ public interface ITaxiTripsManager
 	 * archivo  de  calles.  Aproxime los puntos de inicio y fin a los v�rtices m�s cercanos 
 	 * en el grafo y encuentre los caminos de mayor y menor duraci�n entre dichos puntos. 
 	 */
-	public Path[] caminosMayorMenorDuracion();
+	public Path[] caminosMayorMenorDuracion() throws Exception;
 	
 	/**
 	 * Dado un servicio que inicia en un punto (latitud, longitud) escogido aleatoriamente 
@@ -56,6 +56,6 @@ public interface ITaxiTripsManager
 	 * en  un  punto (latitud, longitud)escogido tambi�n de manera aleatoria del archivo de calles.  
 	 * Indique si  existen  caminos  entre  ambos  puntos,  en  los  que  no  deba  pagar  peaje. 
 	 */
-	public LinkedList<Path> Req6CaminosSinPeaje();
+	public LinkedList<Path> Req6CaminosSinPeaje() throws Exception;
 
 }

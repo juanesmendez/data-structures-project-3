@@ -33,15 +33,15 @@ public class Controller
 		return manager.Req3GenerarMapaComponentes();
 	}
 	
-	public static Path encontrarCaminoMenorDistancia(){
+	public static Path encontrarCaminoMenorDistancia() throws Exception{
 		return manager.encontrarCaminoMenorDistancia();
 	}
 	
-	public static Path[] caminosMayorMenorDuracion(){
+	public static Path[] caminosMayorMenorDuracion() throws Exception{
 		return manager.caminosMayorMenorDuracion();
 	}
 	
-	public static LinkedList<Path> Req6CaminosSinPeaje(){
+	public static LinkedList<Path> Req6CaminosSinPeaje() throws Exception{
 		return manager.Req6CaminosSinPeaje();
 	}
 	
