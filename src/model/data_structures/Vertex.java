@@ -80,11 +80,12 @@ public class Vertex<K extends Comparable<K>,V, A> implements Comparable<Vertex<K
 		//Aca hago algo en base al numero del componente:
 		
 		if(component == 103) {
-			this.color = "#FF0000";
+			this.color = "#3399FF";
 		}else if(component == 104) {
 			this.color = "#00CC00";
 		}else {
-			Color color = new Color(component+50, component+50, component+50);
+			
+			Color color = new Color(component+100, component+100, 100);
 			String hexColour = Integer.toHexString(color.getRGB() & 0xffffff);
 			  if (hexColour.length() < 6) {
 			    hexColour = "000000".substring(0, 6 - hexColour.length()) + hexColour;
@@ -92,7 +93,12 @@ public class Vertex<K extends Comparable<K>,V, A> implements Comparable<Vertex<K
 			hexColour = "#"+hexColour; //Aca le añado el color al componente
 			hexColour = hexColour.toUpperCase();
 			//System.out.println(hexColour);
+			
+			
+			
 			this.color = hexColour;
+			
+			//this.color = "#FF8000";	
 		}
 		
 		

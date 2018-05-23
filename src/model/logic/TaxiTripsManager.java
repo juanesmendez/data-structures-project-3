@@ -304,24 +304,31 @@ public class TaxiTripsManager implements ITaxiTripsManager
 		if(this.componentsList == null) {
 			throw new Exception("No se han calculado componentes conexos del grafo.");
 		}
-		
+
 		int totalServicios = 0;
 		//Calcular total servicios
 		for(Vertex<String,InfoVertex,InfoEdge> v:this.graph.getListVertices()) {
 			totalServicios += v.getValue().getListaServicios().size();
 		}
-		
+
 		//Calcular porcentaje servicios de cada vertice
 		for(Vertex<String,InfoVertex,InfoEdge> v:this.graph.getListVertices()) {
 			//System.out.println(v.getValue().getListaServicios().size());
 			int numServ = v.getValue().getListaServicios().size();
 			float porcentajeServ = (float)numServ /totalServicios;
+
+			if(porcentajeServ < 0.005) {
+				porcentajeServ = (float) 0.005;
+			}else if(porcentajeServ < 0.01) {
+				porcentajeServ = (float) 0.01;
+			}
+			//System.out.println(porcentajeServ);
 			v.getValue().setPorcentajeServicios(porcentajeServ);
 		}
-		
-		
+
+
 		MapManager.dibujoRequerimiento3(this.graph.getListVertices(), this.componentsList);
-		
+
 		/*
 		String url = GOOGLE_STATIC_MAPS_API;
 		String size = "size=400x400";
@@ -329,17 +336,17 @@ public class TaxiTripsManager implements ITaxiTripsManager
 		String markersTotal = "";
 		String markers = "markers=size:mid%7C";
 		String key = API_KEY;
-		
-		
+
+
 		Random rand = new Random();
-		
+
 		for(Component c:this.componentsList) {
 			float r = rand.nextFloat();
 			float g = rand.nextFloat();
 			float b = rand.nextFloat();
 			//System.out.println("R: "+r+" G: "+g+" B: "+b);
 			Color randomColor = new Color(r, g, b);
-			
+
 			String hexColour = Integer.toHexString(randomColor.getRGB() & 0xffffff);
 			if (hexColour.length() < 6) {
 				hexColour = "000000".substring(0, 6 - hexColour.length()) + hexColour;
@@ -349,7 +356,7 @@ public class TaxiTripsManager implements ITaxiTripsManager
 			//-----------------------
 			markers = "markers=size:mid%7C";
 			color = "color:"+hexColour+"%7C";
-			
+
 			markers = markers+color;
 			IHashTableLP<Integer,Vertex<String,InfoVertex,InfoEdge>> hash = c.getHashTableVertices();
 			for(Integer i:hash.keys()) {
@@ -357,19 +364,19 @@ public class TaxiTripsManager implements ITaxiTripsManager
 				markers += v.getValue().getLatitudReferencia() + ","+v.getValue().getLongitudReferencia() + "%7C";
 			}
 			markers = markers.substring(0, markers.length()-3);
-			
+
 			if(markersTotal.equals("")) {
 				markersTotal += markers;
 			}else {
 				markersTotal += "&" + markers;
 			}
 		}
-		
+
 		System.out.println(markersTotal);
-		
+
 		url = url+"&"+size+"&"+markersTotal+"&"+key;
 		System.out.println("Size url: "+url.length());*/
-		
+
 		return this.graph.getListVertices();
 	}
 
