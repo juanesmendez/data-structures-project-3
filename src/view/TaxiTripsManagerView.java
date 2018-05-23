@@ -71,7 +71,20 @@ public class TaxiTripsManagerView
 			{
 			case 0:
 				//Dentro de este llamado incluyo la carga del archivo .csv con datos de coordenadas que posteriormente seran usadas.
+				//Memoria y tiempo
+				long memoryBeforeCase1 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+				long startTime = System.nanoTime();
+
+				
 				grafo= Controller.cargarGrafo();
+				
+				//Tiempo en cargar
+				long endTime = System.nanoTime();
+				long duration = (endTime - startTime)/(1000000);
+
+				//Memoria usada
+				long memoryAfterCase1 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+				System.out.println("Tiempo en cargar: " + duration + " milisegundos \nMemoria utilizada:  "+ ((memoryAfterCase1 - memoryBeforeCase1)/1000000.0) + " MB");
 				System.out.println();
 				System.out.println("NUMERO DE VERTICES EN EL GRAFO: "+grafo.V());
 				System.out.println("NUMERO DE ARCOS EN EL GRAFO: "+grafo.E());
