@@ -5,7 +5,9 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -17,6 +19,9 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import com.teamdev.jxbrowser.chromium.Browser;
+import com.teamdev.jxbrowser.chromium.LoadHTMLParams;
+import com.teamdev.jxbrowser.chromium.internal.ipc.message.GetSpellCheckerLanguageMessage;
+import com.teamdev.jxbrowser.chromium.swing.BrowserView;
 
 import controller.Controller;
 import model.algorithms.DepthFirstSearch;
@@ -93,7 +98,7 @@ public class TaxiTripsManagerView
 					System.out.println("Total servicios que entran: "+vertex.getInDegree());
 					System.out.println();
 
-
+					/*
 					url = GOOGLE_STATIC_MAPS_API;
 					center = "center="+vertex.getValue().getLatitudReferencia()+","+vertex.getValue().getLongitudReferencia();
 					zoom = "zoom=15";
@@ -105,7 +110,8 @@ public class TaxiTripsManagerView
 					//String url = "https://maps.googleapis.com/maps/api/staticmap?center=Berkeley,CA&zoom=14&size=400x400&key=AIzaSyDv2q8A1yyFsVxxcPmkWBhebJQrnaANL34";
 
 					launchMap(url);
-
+	*/
+					MapManager.dibujoRequerimiento1(vertex.getValue().getLatitudReferencia(), vertex.getValue().getLongitudReferencia());
 
 				}catch(Exception e) {
 					System.out.println(e.getMessage());
@@ -138,6 +144,12 @@ public class TaxiTripsManagerView
 					System.out.println("COMPONENTE MAS GRANDE: ");
 					System.out.println(componenteMasGrande.toString());
 					System.out.println();
+					
+					MapManager.dibujoRequerimiento2(componenteMasGrande);
+					
+					//------------
+					
+					/*
 					url = GOOGLE_STATIC_MAPS_API;
 					center = "center="+41.881832+","+-87.623177;
 					zoom = "zoom=10";
@@ -172,7 +184,7 @@ public class TaxiTripsManagerView
 					url = url+size+"&"+scale2+"&"+markers+"&"+key; //Agregar pathcomponents
 					//System.out.println("Tamaño url: "+url.length());
 					launchMap(url);
-
+					*/
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -181,13 +193,35 @@ public class TaxiTripsManagerView
 				break;
 
 			case 3:
-				
+					
 				try {
-					Controller.Req3GenerarMapaComponentes();
+					Iterable<Vertex<String,InfoVertex,InfoEdge>> vertices = Controller.Req3GenerarMapaComponentes();
+					
+					//MapManager.dibujoRequerimiento3(vertices);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				
+				/*
+			       File file2 = new File("mapR2.html");
+			       
+			       try {
+			    	   final Browser browser = new Browser();
+					browser.loadURL(file2.toURI().toURL().toString());
+					BrowserView browserView = new BrowserView(browser);
+
+				       JFrame frame = new JFrame("JxBrowser Google Maps");
+				       frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+				       frame.add(browserView, BorderLayout.CENTER);
+				       frame.setSize(900, 500);
+				       frame.setLocationRelativeTo(null);
+				       frame.setVisible(true);
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				*/
 				
 				break;
 			case 4:

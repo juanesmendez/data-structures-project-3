@@ -13,8 +13,17 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+<<<<<<< Updated upstream
 	<classpathentry kind="lib" path="json-simple-1.1.1.jar"/>
 	<classpathentry kind="lib" path="jxbrowser-6.20.jar"/>
 	<classpathentry kind="lib" path="jxbrowser-mac-6.20.jar"/>
+=======
+	<classpathentry kind="lib" path="/Users/juanestebanmendez/Documents/Los Andes/Estructuras de Datos/proyecto_3_201810_sec_3_team_9/jxbrowser-6.20.jar"/>
+	<classpathentry kind="lib" path="/Users/juanestebanmendez/Documents/Los Andes/Estructuras de Datos/proyecto_3_201810_sec_3_team_9/jxbrowser-linux64-6.20.jar"/>
+	<classpathentry kind="lib" path="/Users/juanestebanmendez/Documents/Los Andes/Estructuras de Datos/proyecto_3_201810_sec_3_team_9/jxbrowser-mac-6.20.jar"/>
+	<classpathentry kind="lib" path="/Users/juanestebanmendez/Documents/Los Andes/Estructuras de Datos/proyecto_3_201810_sec_3_team_9/jxbrowser-win32-6.20.jar"/>
+	<classpathentry kind="lib" path="/Users/juanestebanmendez/Documents/Los Andes/Estructuras de Datos/proyecto_3_201810_sec_3_team_9/license.jar"/>
+	<classpathentry kind="lib" path="/Users/juanestebanmendez/Documents/Los Andes/Estructuras de Datos/proyecto_3_201810_sec_3_team_9/org.apache.commons.io.jar"/>
+>>>>>>> Stashed changes
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

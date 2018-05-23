@@ -35,7 +35,7 @@ public interface ITaxiTripsManager
 	 * encontrados  en  el  punto  2, genere  un  mapa  coloreado  de  la  red  vial  
 	 * de  Chicago utilizando Google Maps.
 	 */
-	public void Req3GenerarMapaComponentes() throws Exception;
+	public Iterable<Vertex<String,InfoVertex,InfoEdge>> Req3GenerarMapaComponentes() throws Exception;
 	
 	/**
 	 *Encontrar el camino de costo m�nimo (menor distancia)  para un servicio que inicia 

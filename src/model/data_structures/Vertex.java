@@ -1,5 +1,6 @@
 package model.data_structures;
 
+import java.awt.Color;
 
 public class Vertex<K extends Comparable<K>,V, A> implements Comparable<Vertex<K,V,A>>{ //Toco volverla publica , cambiarla a private cuando se pueda
 	
@@ -11,6 +12,7 @@ public class Vertex<K extends Comparable<K>,V, A> implements Comparable<Vertex<K
 	private int outDegree;
 	private int component;
 	private LinkedList<Edge<A>> edges;
+	private String color;
 	
 	public Vertex(K id, V value) {
 		this.id = id;
@@ -20,6 +22,7 @@ public class Vertex<K extends Comparable<K>,V, A> implements Comparable<Vertex<K
 		this.outDegree = 0;
 		this.component = 0; //Chequear en que valor deberia inicializar component
 		this.edges = new List<>();
+		this.color = "";
 	}
 	
 	public int getNum() {
@@ -74,6 +77,36 @@ public class Vertex<K extends Comparable<K>,V, A> implements Comparable<Vertex<K
 
 	public void setComponent(int component) {
 		this.component = component;
+		//Aca hago algo en base al numero del componente:
+		
+		if(component == 103) {
+			this.color = "#FF0000";
+		}else if(component == 104) {
+			this.color = "#00CC00";
+		}else {
+			Color color = new Color(component+50, component+50, component+50);
+			String hexColour = Integer.toHexString(color.getRGB() & 0xffffff);
+			  if (hexColour.length() < 6) {
+			    hexColour = "000000".substring(0, 6 - hexColour.length()) + hexColour;
+			  }
+			hexColour = "#"+hexColour; //Aca le añado el color al componente
+			hexColour = hexColour.toUpperCase();
+			//System.out.println(hexColour);
+			this.color = hexColour;
+		}
+		
+		
+		
+	}
+
+	
+	
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 
 	public void addEdge(Vertex vertexFini, A infoEdge) {

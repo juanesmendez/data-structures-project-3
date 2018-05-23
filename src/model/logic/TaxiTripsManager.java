@@ -46,6 +46,7 @@ import model.vo.Coordinate;
 import model.vo.InfoEdge;
 import model.vo.InfoVertex;
 import model.vo.Path;
+import view.MapManager;
 
 public class TaxiTripsManager implements ITaxiTripsManager
 {
@@ -294,7 +295,7 @@ public class TaxiTripsManager implements ITaxiTripsManager
 	}
 
 	@Override
-	public void Req3GenerarMapaComponentes() throws Exception {
+	public Iterable<Vertex<String,InfoVertex,InfoEdge>> Req3GenerarMapaComponentes() throws Exception {
 		// TODO Auto-generated method stub
 		if(this.graph == null) {
 			throw new Exception("Grafo aun no ha sido creado");
@@ -302,10 +303,25 @@ public class TaxiTripsManager implements ITaxiTripsManager
 		if(this.componentsList == null) {
 			throw new Exception("No se han calculado componentes conexos del grafo.");
 		}
+		
+		int totalServicios = 0;
+		//Calcular total servicios
+		for(Vertex<String,InfoVertex,InfoEdge> v:this.graph.getListVertices()) {
+			totalServicios += v.getValue().getListaServicios().size();
+		}
+		
+		//Calcular porcentaje servicios de cada vertice
+		for(Vertex<String,InfoVertex,InfoEdge> v:this.graph.getListVertices()) {
+			//System.out.println(v.getValue().getListaServicios().size());
+			int numServ = v.getValue().getListaServicios().size();
+			float porcentajeServ = (float)numServ /totalServicios;
+			v.getValue().setPorcentajeServicios(porcentajeServ);
+		}
+		
+		
+		MapManager.dibujoRequerimiento3(this.graph.getListVertices(), this.componentsList);
+		
 		/*
-		for(Vertex v:this.graph.getListVertices()) {
-			System.out.println("Num: "+ v.getNum() + "  Component: "+v.getComponent());
-		}*/
 		String url = GOOGLE_STATIC_MAPS_API;
 		String size = "size=400x400";
 		String color = "color:";
@@ -322,10 +338,7 @@ public class TaxiTripsManager implements ITaxiTripsManager
 			float b = rand.nextFloat();
 			//System.out.println("R: "+r+" G: "+g+" B: "+b);
 			Color randomColor = new Color(r, g, b);
-			/*
-			String hex = String.format("#%02x%02x%02x", r, g, b);  
-			System.out.println(hex);*/
-
+			
 			String hexColour = Integer.toHexString(randomColor.getRGB() & 0xffffff);
 			if (hexColour.length() < 6) {
 				hexColour = "000000".substring(0, 6 - hexColour.length()) + hexColour;
@@ -354,8 +367,9 @@ public class TaxiTripsManager implements ITaxiTripsManager
 		System.out.println(markersTotal);
 		
 		url = url+"&"+size+"&"+markersTotal+"&"+key;
-		System.out.println("Size url: "+url.length());
+		System.out.println("Size url: "+url.length());*/
 		
+		return this.graph.getListVertices();
 	}
 
 	@Override
@@ -502,8 +516,8 @@ public class TaxiTripsManager implements ITaxiTripsManager
 
 
 
-		initialVertex = graph.getVertexByNum(114);
-		finalVertex = graph.getVertexByNum(130);
+		//initialVertex = graph.getVertexByNum(114);
+		//finalVertex = graph.getVertexByNum(130);
 
 		FindAllPaths<String, InfoVertex> fal = new FindAllPaths<String,InfoVertex>(this.graph, initialVertex, finalVertex,idArray);
 

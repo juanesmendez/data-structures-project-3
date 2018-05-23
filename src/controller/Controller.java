@@ -29,8 +29,8 @@ public class Controller
 		return manager.calcularComponentesFuertementeConexos();
 	}
 	
-	public static void Req3GenerarMapaComponentes() throws Exception {
-		manager.Req3GenerarMapaComponentes();
+	public static Iterable<Vertex<String,InfoVertex,InfoEdge>>  Req3GenerarMapaComponentes() throws Exception {
+		return manager.Req3GenerarMapaComponentes();
 	}
 	
 	public static Path encontrarCaminoMenorDistancia(){

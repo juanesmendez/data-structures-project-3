@@ -17,9 +17,10 @@ public class Map extends JFrame{
 		image = imageIcon;
 		label = new JLabel(image);
 		add(label);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 		setTitle("Google Static Map");
+		toFront();
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		this.setLocation(dim.width/4-this.getSize().width/2, dim.height/5-this.getSize().height/2);
 		pack();

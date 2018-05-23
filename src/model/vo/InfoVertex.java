@@ -9,11 +9,13 @@ public class InfoVertex implements Comparable<InfoVertex>{
 	private double latitudReferencia;
 	private double longitudReferencia;
 	private LinkedList<String> listaServicios; //Va a guardar los ids de servicios que entran en el disco
+	private float porcentajeServicios;
 	
 	public InfoVertex(double latitudReferencia,double longitudReferencia) {
 		this.latitudReferencia = latitudReferencia;
 		this.longitudReferencia = longitudReferencia;
 		this.listaServicios = new List<>();
+		this.porcentajeServicios = 0;
 	}
 
 	public double getLatitudReferencia() {
@@ -38,6 +40,14 @@ public class InfoVertex implements Comparable<InfoVertex>{
 
 	public void setListaServicios(LinkedList<String> listaServicios) {
 		this.listaServicios = listaServicios;
+	}
+
+	public float getPorcentajeServicios() {
+		return porcentajeServicios;
+	}
+
+	public void setPorcentajeServicios(float porcentajeServicios) {
+		this.porcentajeServicios = porcentajeServicios;
 	}
 
 	@Override
