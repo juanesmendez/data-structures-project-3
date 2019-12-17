@@ -14,8 +14,7 @@ public class KosarajuSharirSCC<K extends Comparable<K>,V,A> {
 	public KosarajuSharirSCC(IDiGraph<K,V,A> graph) {
 		marked = new boolean[graph.V()];
 		id = new int[graph.V()];
-		DepthFirstOrder<K,V,A> dfs = new DepthFirstOrder<>(graph.reverse());
-		
+		DepthFirstOrder<K,V,A> dfs = new DepthFirstOrder<>(graph.reverse());	
 		for(int v:dfs.reversePostorder()) {
 			//Vertex<K,V,A> vertex = graph.getVertexByNum(v);
 			if(!marked[v]) {

@@ -51,8 +51,8 @@ public class FindAllPaths<K extends Comparable<K>,V>{
 
 		for(Edge<InfoEdge> e:u.getEdges()) {
 			Vertex<K,V,InfoEdge> w = e.getFinalVertex();
-
-			if(e.getWeight().getContPeaje() == 0) {
+			
+			if(e.getWeight().getContPeaje() != 0) {
 				if(!isVisited[w.getNum()]) { //Chequear por que aca no va a visitar a todos debido a las componentes. Se va a quedar en un loop infinito
 					//store current edge in path:
 
